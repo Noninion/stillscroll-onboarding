@@ -1,0 +1,140 @@
+:root {
+  /* Background — deep blue / near-black starfield */
+  --bg: #0a0e17;
+  --bg-elev: #111722;
+  --surface: #19202d;
+  --surface-2: #222a3a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Ink */
+  --ink: #eef1f4;
+  --ink-dim: #a4adba;
+  --ink-mute: #6f7886;
+
+  /* Warm — problem / current state (terracotta) */
+  --warm: #d97757;
+  --warm-strong: #e58b6c;
+  --warm-soft: rgba(217, 119, 87, 0.16);
+  --warm-line: rgba(217, 119, 87, 0.45);
+
+  /* Cool — solution / settled state (deep teal) */
+  --cool: #3aa3a3;
+  --cool-strong: #4cbcbc;
+  --cool-soft: rgba(58, 163, 163, 0.16);
+  --cool-line: rgba(58, 163, 163, 0.45);
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Spacing scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+
+  /* Typography */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui,
+    sans-serif;
+  --font-display:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui,
+    sans-serif;
+
+  --t-pre: 13px;
+  --t-sub: 14px;
+  --t-body: 15px;
+  --t-body-lg: 17px;
+  --t-h2: 22px;
+  --t-h1: 26px;
+  --t-h1-lg: 30px;
+  --t-mega: 72px;
+
+  /* Phone frame */
+  --phone-w: 390px;
+  --phone-h: 844px;
+
+  color-scheme: dark;
+  color: var(--ink);
+  background: #05070d;
+  font-family: var(--font-sans);
+  font-size: var(--t-body-lg);
+  line-height: 1.45;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100svh;
+}
+
+body {
+  background:
+    radial-gradient(
+      1200px 800px at 50% -10%,
+      rgba(58, 163, 163, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 700px at 80% 110%,
+      rgba(217, 119, 87, 0.06),
+      transparent 60%
+    ),
+    #05070d;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  outline: 0;
+}
+
+/* Accent helpers used inline in copy */
+.warm {
+  color: var(--warm-strong);
+}
+.cool {
+  color: var(--cool-strong);
+}

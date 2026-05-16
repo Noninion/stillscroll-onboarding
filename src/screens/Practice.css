@@ -1,0 +1,87 @@
+.practice {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-5);
+}
+
+.practice__title {
+  font-size: 14px;
+  color: var(--ink-dim);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.practice__counter {
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+
+.bc {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bc__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--cool-line);
+  background: radial-gradient(
+    circle at center,
+    var(--cool-soft) 0%,
+    transparent 70%
+  );
+  transition: transform 4000ms cubic-bezier(0.4, 0, 0.6, 1);
+  transform: scale(var(--bc-scale, 0.6));
+}
+
+.bc__core {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: var(--cool-soft);
+  border: 1px solid var(--cool-line);
+  transition: transform 4000ms cubic-bezier(0.4, 0, 0.6, 1),
+    opacity 400ms ease;
+  transform: scale(var(--bc-scale, 0.6));
+  opacity: 0.85;
+}
+
+.bc__label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--cool-strong);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  transition: opacity 300ms ease;
+}
+
+.practice__toast {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-6) var(--s-4);
+  background: var(--surface);
+  border: 1px solid var(--cool-line);
+  border-radius: var(--r-md);
+}
+.practice__toast-num {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--cool-strong);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
