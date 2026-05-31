@@ -38,8 +38,8 @@ export default function SocialProof() {
           </ChipRow>
         )}
         <Testimonial
-          quote="It makes me pause and breathe before I scroll. That single beat changed my whole relationship to my phone."
-          attribution="Stillscroll user"
+          quote="I haven't quit anything. I just have to breathe for a minute before the app opens — and half the time, by the time I'm done, I've forgotten what I picked up the phone for."
+          attribution="Beta tester, 6 weeks in"
         />
       </div>
     </ScreenContainer>

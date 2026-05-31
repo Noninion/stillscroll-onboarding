@@ -22,6 +22,7 @@ export default function Mechanic() {
   return (
     <ScreenContainer
       tone={beat === 0 ? 'cool' : 'warm'}
+      section="How it works"
       onBack={beat === 1 ? handleBack : undefined}
       footer={<Button onClick={handleNext}>Continue</Button>}
     >
@@ -30,49 +31,53 @@ export default function Mechanic() {
   );
 }
 
+// Layout for both beats: the descriptive text sits at the top (just under
+// the "HOW IT WORKS" eyebrow), and the visual + counter + action label
+// are centered in the remaining space below it.
+const beatStyles = {
+  intro: { textAlign: 'center', padding: '0 var(--s-2)' },
+  group: {
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    gap: 'var(--s-6)',
+    justifyContent: 'center',
+  },
+};
+
 function BreatheBeat() {
   return (
-    <div
-      style={{
-        flex: '1 1 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        gap: 'var(--s-6)',
-        justifyContent: 'center',
-      }}
-    >
-      <PulseCircle />
-      <Counter from={1} to={3} unit="min" tone="cool" />
-      <H2>
-        <span className="cool">Breathe</span>
-      </H2>
-      <Body>In Stillscroll, you earn screen time with a breath.</Body>
-    </div>
+    <>
+      <div style={beatStyles.intro}>
+        <Body>In Stillscroll, you earn screen time with a breath.</Body>
+      </div>
+      <div style={beatStyles.group}>
+        <PulseCircle />
+        <Counter from={1} to={3} unit="min" tone="cool" />
+        <H2>
+          <span className="cool">Breathe</span>
+        </H2>
+      </div>
+    </>
   );
 }
 
 function ScrollBeat() {
   return (
-    <div
-      style={{
-        flex: '1 1 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        gap: 'var(--s-6)',
-        justifyContent: 'center',
-      }}
-    >
-      <PhoneHand />
-      <Counter from={9} to={4} unit="min" tone="warm" />
-      <H2>
-        <span className="warm">Scroll</span>
-      </H2>
-      <Body>Spend the time you earned, when you choose.</Body>
-    </div>
+    <>
+      <div style={beatStyles.intro}>
+        <Body>Spend the time you earned, when you choose.</Body>
+      </div>
+      <div style={beatStyles.group}>
+        <PhoneHand />
+        <Counter from={9} to={4} unit="min" tone="warm" />
+        <H2>
+          <span className="warm">Scroll</span>
+        </H2>
+      </div>
+    </>
   );
 }
 

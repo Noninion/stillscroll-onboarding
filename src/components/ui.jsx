@@ -18,6 +18,7 @@ export function ScreenContainer({
   scroll = false,
   tone,
   onBack,
+  section,
   children,
   footer,
 }) {
@@ -43,9 +44,15 @@ export function ScreenContainer({
               ‹
             </button>
           )}
-          {visibleProgress && (
+          {visibleProgress ? (
             <ProgressBar value={progressValue} />
-          )}
+          ) : section ? (
+            <>
+              <span className="screen__section">{section}</span>
+              {/* Spacer matches back-btn width so the label visually centers */}
+              {showBack && <span className="screen__head-spacer" aria-hidden="true" />}
+            </>
+          ) : null}
         </div>
       )}
       <div className={`screen__body${scroll ? ' screen__body--scroll' : ''}`}>

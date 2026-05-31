@@ -1,51 +1,39 @@
-/* ===== Phone frame (desktop preview) ===== */
+/* ===== Web layout ===== */
 
-.stage {
+/* Full-page background canvas */
+.web-stage {
   min-height: 100svh;
+  min-height: 100dvh; /* fallback for browsers that support dvh */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--s-6);
-  gap: var(--s-4);
+  justify-content: flex-start;
 }
 
-.phone {
-  width: var(--phone-w);
-  height: var(--phone-h);
-  border-radius: 52px;
-  background: var(--bg);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 10px #0c0f17,
-    0 30px 90px rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  position: relative;
+/* The app "shell" — full-viewport on mobile, a centered card on desktop */
+.web-frame {
+  width: 100%;
+  max-width: 430px;
+  /* Fixed height so .screen { height: 100% } resolves correctly */
+  height: 100svh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  isolation: isolate;
+  background: var(--bg);
+  overflow: hidden;
+  position: relative;
 }
 
-.phone::before {
+/* Safe-area padding at the top (iOS notch / Dynamic Island) */
+.web-frame::before {
   content: '';
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110px;
-  height: 32px;
-  background: #000;
-  border-radius: 20px;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.phone__statusbar {
-  height: 54px;
+  display: block;
+  height: env(safe-area-inset-top, 0px);
   flex: 0 0 auto;
 }
 
-.phone__viewport {
+/* Mirrors the old .phone__viewport — gives .screen its anchor */
+.web-viewport {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -53,52 +41,96 @@
   position: relative;
 }
 
-/* On narrow screens, fill the window instead of showing a frame. */
-@media (max-width: 480px) {
-  .stage {
-    padding: 0;
-  }
-  .phone {
-    width: 100%;
-    height: 100svh;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .phone::before {
-    display: none;
-  }
-  .phone__statusbar {
-    height: env(safe-area-inset-top, 0);
-  }
-}
-
-/* ===== Dev nav (debug strip under the phone) ===== */
+/* ===== Dev nav (LOCAL_DEV only) =====
+   Fixed strip at the bottom of the viewport so it floats over the web-frame
+   without interfering with layout.  Hidden in production builds. */
 
 .devnav {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
   display: flex;
   gap: var(--s-2);
   align-items: center;
   font-size: 12px;
   color: var(--ink-mute);
+  background: rgba(10, 14, 23, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 6px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  max-width: calc(100vw - 24px);
 }
+
 .devnav button {
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   padding: 6px 12px;
   color: var(--ink-dim);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
+  white-space: nowrap;
 }
 .devnav button:hover:not(:disabled) {
   border-color: var(--border-strong);
   color: var(--ink);
 }
 .devnav button:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
-.devnav__label {
-  min-width: 220px;
+
+.devnav__select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  color: var(--ink-dim);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 6px 10px;
+  max-width: 180px;
+  cursor: pointer;
+}
+.devnav__select:hover {
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+.devnav__select option {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.devnav__count {
+  font-variant-numeric: tabular-nums;
+  padding: 0 4px;
+  min-width: 44px;
   text-align: center;
+}
+
+/* On desktop: show a contained card with a subtle border */
+@media (min-width: 480px) {
+  .web-stage {
+    justify-content: center;
+    padding: var(--s-8) var(--s-6);
+  }
+
+  .web-frame {
+    height: min(820px, calc(100svh - 96px));
+    border-radius: var(--r-xl);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 24px 80px rgba(0, 0, 0, 0.65);
+  }
+
+  /* No safe-area inset needed above the card on desktop */
+  .web-frame::before {
+    display: none;
+  }
 }
 
 /* ===== Screen container ===== */
@@ -108,7 +140,9 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  padding: var(--s-5) var(--s-6) var(--s-6);
+  /* Bottom padding respects the iOS home indicator */
+  padding: var(--s-5) var(--s-6)
+    max(var(--s-6), env(safe-area-inset-bottom, var(--s-6)));
   position: relative;
   isolation: isolate;
 }
@@ -145,6 +179,24 @@
   gap: var(--s-3);
   height: 32px;
   margin-bottom: var(--s-4);
+}
+
+/* Persistent section label (e.g. "How it works") rendered in the head
+   slot when no progress bar is shown.  Sits centered between the back
+   button and a matching-width spacer. */
+.screen__section {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-mute);
+}
+.screen__head-spacer {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
 }
 
 .screen__body {
@@ -411,10 +463,12 @@
   margin-bottom: 2px;
   font-size: 13px;
 }
-.research a {
-  color: var(--cool-strong);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+/* Citation — not a real link, just attribution.  Italic + dim + a hair
+   smaller than the body copy. */
+.research cite {
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-mute);
 }
 
 /* ===== App icon ===== */

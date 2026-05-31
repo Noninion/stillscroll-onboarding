@@ -60,10 +60,6 @@
   --t-h1-lg: 30px;
   --t-mega: 72px;
 
-  /* Phone frame */
-  --phone-w: 390px;
-  --phone-h: 844px;
-
   color-scheme: dark;
   color: var(--ink);
   background: #05070d;
@@ -87,10 +83,17 @@ body,
 #root {
   margin: 0;
   padding: 0;
+  /* Use small viewport height — stable even when mobile browser chrome is visible */
   min-height: 100svh;
 }
 
 body {
+  /* Prevent iOS double-tap zoom on buttons/inputs */
+  touch-action: manipulation;
+
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior: none;
+
   background:
     radial-gradient(
       1200px 800px at 50% -10%,
@@ -120,6 +123,8 @@ button {
   border: 0;
   padding: 0;
   cursor: pointer;
+  /* Prevent double-tap zoom on iOS buttons */
+  touch-action: manipulation;
 }
 
 input,

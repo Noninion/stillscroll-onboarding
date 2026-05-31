@@ -6,9 +6,34 @@ import {
   FooterNote,
 } from '../components/ui.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
+import { diagnosticVariant } from '../state/options.js';
+
+// Four diagnostic moods.  Picked by `diagnosticVariant()` on a best-effort
+// read of the first emotion (with hooks as fallback).
+const VARIANTS = {
+  hot: {
+    title: 'Your system has been running hot.',
+    body: 'Based on your answers, your nervous system is spending a lot of time in a low-grade stress state.',
+  },
+  low: {
+    title: "You've been running on empty.",
+    body: "When the brain gets constant input without recovery, it stops registering rest — even when you're sitting still.",
+  },
+  absent: {
+    title: "You've been somewhere else.",
+    body: "Your attention's been pulled away from your own life — into other people's lives, feeds, and headlines — for hours every day.",
+  },
+  measuring: {
+    title: "You've been measuring yourself against the wrong yardstick.",
+    body: 'Constant comparison is wired into our attention. It distorts what you feel about yourself — and you barely notice it happening.',
+  },
+};
 
 export default function Diagnostic() {
-  const { next } = useOnboarding();
+  const { answers, next } = useOnboarding();
+  const variant = diagnosticVariant(answers.emotions, answers.hooks);
+  const { title, body } = VARIANTS[variant];
+
   return (
     <ScreenContainer
       tone="warm"
@@ -23,11 +48,8 @@ export default function Diagnostic() {
           justifyContent: 'center',
         }}
       >
-        <H1 lg>Your system has been running hot.</H1>
-        <Body>
-          Based on your answers, your nervous system is spending a lot of time
-          in a low-grade stress state.
-        </Body>
+        <H1 lg>{title}</H1>
+        <Body>{body}</Body>
         <Waves />
         <FooterNote>This isn't a clinical diagnosis.</FooterNote>
       </div>

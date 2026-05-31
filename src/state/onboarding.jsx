@@ -8,38 +8,19 @@ import {
 import { STEPS } from './steps.js';
 
 const initialAnswers = {
-  // step 0
-  attConsent: null,
-  // step 2
+  // quiz
   name: '',
-  // step 3
   goals: [],
-  // step 4
   currentHours: 4,
-  // step 5
   targetHours: 3,
-  // step 7
   distractingApps: [],
-  // step 8
   hooks: [],
-  // step 9
   emotions: [],
-  // step 11
   ageBucket: null,
-  // step 15
   pastAttempts: [],
-  // step 19
-  reminderTime: '22:00',
-  // step 23
-  practiceFrequency: null,
-  // permissions
-  screenTimePermission: null,
-  notificationPermission: null,
-  familyControlsSelection: null,
-  // step 32
-  authMethod: null,
-  // step 36
-  planChoice: null,
+  // conversion
+  email: '',
+  waitlistSubmitted: false,
 };
 
 const initial = { step: 0, answers: initialAnswers };

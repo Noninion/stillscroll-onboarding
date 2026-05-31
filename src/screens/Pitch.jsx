@@ -9,7 +9,10 @@ import { useOnboarding } from '../state/onboarding.jsx';
 export default function Pitch() {
   const { next } = useOnboarding();
   return (
-    <ScreenContainer footer={<Button onClick={next}>Continue</Button>}>
+    <ScreenContainer
+      section="How it works"
+      footer={<Button onClick={next}>Continue</Button>}
+    >
       <div
         style={{
           flex: '1 1 auto',

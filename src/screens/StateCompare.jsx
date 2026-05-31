@@ -12,14 +12,17 @@ import {
   appFor,
   labelFor,
   EMOTION_OPTIONS,
-  stateChipFromGoals,
+  settledChipFromEmotion,
+  researchForEmotion,
 } from '../state/options.js';
 
 export default function StateCompare() {
   const { answers, next } = useOnboarding();
   const firstApp = appFor(answers.distractingApps[0]);
-  const firstEmotion = labelFor(EMOTION_OPTIONS, answers.emotions[0]);
-  const settled = stateChipFromGoals(answers.goals);
+  const firstEmotion = answers.emotions[0];
+  const firstEmotionLabel = labelFor(EMOTION_OPTIONS, firstEmotion);
+  const settled = settledChipFromEmotion(firstEmotion);
+  const research = researchForEmotion(firstEmotion);
 
   return (
     <ScreenContainer footer={<Button onClick={next}>Continue</Button>}>
@@ -36,7 +39,7 @@ export default function StateCompare() {
           <span className="warm">Current State</span>
         </H2>
         <AppIcon app={firstApp} size="lg" />
-        {firstEmotion && <Chip tone="warm">{firstEmotion}</Chip>}
+        {firstEmotionLabel && <Chip tone="warm">{firstEmotionLabel}</Chip>}
 
         <Divider />
 
@@ -46,11 +49,7 @@ export default function StateCompare() {
         <Chip tone="cool">{settled}</Chip>
 
         <ResearchCard>
-          Mindfulness practices reduce anxiety and improve sustained attention.{' '}
-          <a href="#" onClick={(e) => e.preventDefault()}>
-            From Goyal et al., JAMA 2014
-          </a>
-          .
+          {research.text} <cite>From {research.cite}.</cite>
         </ResearchCard>
       </div>
     </ScreenContainer>
