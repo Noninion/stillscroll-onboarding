@@ -122,7 +122,6 @@ These events include:
 content_id
 content_type=product
 content_name
-currency=USD
 event_id=<event_id>
 ```
 
@@ -139,7 +138,7 @@ The Next button is sent to TikTok as:
 ClickButton
 ```
 
-with step-specific `content_id`, `content_name`, `content_type`, `value`, `currency`, and `event_id`.
+with step-specific `content_id`, `content_name`, `content_type`, and `event_id`.
 
 ## Checks
 
