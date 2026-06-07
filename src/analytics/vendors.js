@@ -34,6 +34,17 @@ function createId(prefix) {
   return `${prefix}_${random}`;
 }
 
+async function sha256Hex(value) {
+  if (!value || typeof crypto === 'undefined' || !crypto.subtle) return '';
+
+  const bytes = new TextEncoder().encode(value);
+  const hash = await crypto.subtle.digest('SHA-256', bytes);
+
+  return Array.from(new Uint8Array(hash))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 function getMixpanelDistinctId() {
   if (typeof window === 'undefined') return createId('anon');
 
@@ -387,8 +398,15 @@ export function sendToVendors(eventName, properties = {}) {
     }
 
     if (window.ttq) {
-      const tikTokEventName = eventName === 'waitlist_submitted' ? 'Lead' : eventName;
-      window.ttq.track?.(tikTokEventName, properties);
+      const tikTokEvents = buildTikTokEvents(eventName, properties);
+      tikTokEvents.forEach((tikTokEvent) => {
+        debugLog('tiktok_track_called', {
+          eventName: tikTokEvent.name,
+          sourceEventName: eventName,
+          eventId: tikTokEvent.options.event_id,
+        });
+        window.ttq.track?.(tikTokEvent.name, tikTokEvent.parameters, tikTokEvent.options);
+      });
     }
   }
 
@@ -407,6 +425,80 @@ export function sendToVendors(eventName, properties = {}) {
       }).catch((error) => debugLog('event_endpoint_failed', error));
     }
   }
+}
+
+function stillscrollContent(properties, fallbackId, fallbackName) {
+  return {
+    content_id: properties.step_key
+      ? `stillscroll_step_${properties.step_key}`
+      : fallbackId,
+    content_type: 'product',
+    content_name: properties.step_title
+      ? `Stillscroll Step: ${properties.step_title}`
+      : fallbackName,
+  };
+}
+
+function standardTikTokEvent(name, properties, content, eventId) {
+  return {
+    name,
+    parameters: {
+      contents: [content],
+      value: 0,
+      currency: 'USD',
+    },
+    options: {
+      event_id: eventId,
+    },
+  };
+}
+
+function buildTikTokEvents(eventName, properties) {
+  const eventId = properties.event_id ?? createId(eventName);
+
+  if (eventName === 'step_viewed') {
+    return [
+      standardTikTokEvent(
+        'ViewContent',
+        properties,
+        stillscrollContent(
+          properties,
+          'stillscroll_onboarding',
+          'Stillscroll Onboarding',
+        ),
+        eventId,
+      ),
+    ];
+  }
+
+  if (eventName === 'waitlist_submitted') {
+    const content = {
+      content_id: 'stillscroll_waitlist',
+      content_type: 'product',
+      content_name: 'Stillscroll Waitlist',
+    };
+
+    return ['Lead', 'Subscribe', 'CompleteRegistration'].map((name) =>
+      standardTikTokEvent(name, properties, content, `${eventId}_${name}`),
+    );
+  }
+
+  if (eventName === 'next_button_clicked') {
+    return [
+      standardTikTokEvent(
+        'ClickButton',
+        properties,
+        stillscrollContent(
+          properties,
+          'stillscroll_next_button',
+          'Stillscroll Next Button',
+        ),
+        eventId,
+      ),
+    ];
+  }
+
+  return [];
 }
 
 export function identifyMixpanelUser(distinctId, profile = {}) {
@@ -436,4 +528,26 @@ export function identifyMixpanelUser(distinctId, profile = {}) {
   setMixpanelDistinctId(distinctId);
 
   sendDirectMixpanelEngage('$set', profileProperties);
+}
+
+export async function identifyTikTokUser({ email, externalId }) {
+  if (typeof window === 'undefined' || !window.ttq?.identify) return;
+
+  const cleanEmail = email?.trim().toLowerCase();
+  const cleanExternalId = externalId?.trim().toLowerCase();
+  const payload = {
+    email: await sha256Hex(cleanEmail),
+    external_id: await sha256Hex(cleanExternalId || cleanEmail),
+  };
+  const cleanPayload = Object.fromEntries(
+    Object.entries(payload).filter(([, value]) => Boolean(value)),
+  );
+
+  if (Object.keys(cleanPayload).length === 0) return;
+
+  debugLog('tiktok_identify_called', {
+    hasEmail: Boolean(cleanPayload.email),
+    hasExternalId: Boolean(cleanPayload.external_id),
+  });
+  window.ttq.identify(cleanPayload);
 }

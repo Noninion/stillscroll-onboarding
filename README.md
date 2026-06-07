@@ -108,11 +108,39 @@ utm_placement=__PLACEMENT__
 
 The app captures these params automatically for Mixpanel, Kit waitlist payloads, and conversion metadata.
 
-Waitlist submit is sent to TikTok as the standard conversion event:
+Funnel events are sent to TikTok as:
 
 ```txt
-Lead
+step_viewed -> ViewContent
+next_button_clicked -> ClickButton
+waitlist_submitted -> Lead, Subscribe, CompleteRegistration
 ```
+
+These events include:
+
+```txt
+content_id
+content_type=product
+content_name
+value=0
+currency=USD
+event_id=<event_id>
+```
+
+After a successful waitlist submit, the app calls `ttq.identify` with SHA-256 hashed:
+
+```txt
+email
+external_id
+```
+
+The Next button is sent to TikTok as:
+
+```txt
+ClickButton
+```
+
+with step-specific `content_id`, `content_name`, `content_type`, `value`, `currency`, and `event_id`.
 
 ## Checks
 

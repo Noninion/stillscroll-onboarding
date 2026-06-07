@@ -87,7 +87,7 @@ export default function EmailCapture() {
 
     try {
       await submitToWaitlist(waitlistPayload);
-      identifyLead({
+      await identifyLead({
         email: email.trim(),
         name,
         properties: analyticsPayload,

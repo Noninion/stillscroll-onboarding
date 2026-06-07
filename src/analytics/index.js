@@ -6,6 +6,7 @@ import {
   initMixpanel,
   initTikTokPixel,
   identifyMixpanelUser,
+  identifyTikTokUser,
   sendToVendors,
 } from './vendors.js';
 
@@ -145,7 +146,7 @@ export function trackWaitlistSubmitFailed(payload) {
   trackEvent('waitlist_submit_failed', payload);
 }
 
-export function identifyLead({ email, name, properties = {} }) {
+export async function identifyLead({ email, name, properties = {} }) {
   const cleanEmail = email?.trim().toLowerCase();
   if (!cleanEmail) return;
 
@@ -156,5 +157,9 @@ export function identifyLead({ email, name, properties = {} }) {
     $name: name?.trim() || undefined,
     lead_email_domain: cleanEmail.split('@')[1] ?? '',
     lead_identified_at: new Date().toISOString(),
+  });
+  await identifyTikTokUser({
+    email: cleanEmail,
+    externalId: cleanEmail,
   });
 }
