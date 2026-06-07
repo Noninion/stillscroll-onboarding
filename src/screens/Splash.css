@@ -1,11 +1,15 @@
 .splash {
   flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: var(--s-8) var(--s-6) var(--s-6);
   gap: var(--s-6);
   align-items: center;
   text-align: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .splash__brand {
@@ -153,4 +157,9 @@
   letter-spacing: -0.01em;
   color: var(--ink);
   max-width: 280px;
+}
+
+.splash .btn {
+  flex: 0 0 auto;
+  min-height: 54px;
 }

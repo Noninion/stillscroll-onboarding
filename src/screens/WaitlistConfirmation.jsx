@@ -9,16 +9,21 @@ import {
 } from '../components/ui.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
 import { shortGoalLabel } from '../state/options.js';
+import {
+  getLifetimeReclaimedYears,
+  getSavedHoursPerDay,
+} from '../state/usageMath.js';
 import './WaitlistConfirmation.css';
-
-const LIFESPAN_YEARS = 85;
 
 export default function WaitlistConfirmation() {
   const { answers } = useOnboarding();
   const name = answers.name.trim();
   const email = answers.email.trim();
-  const saved = Math.max(0, answers.currentHours - answers.targetHours);
-  const lifetimeGain = Math.round((saved * LIFESPAN_YEARS) / 24);
+  const saved = getSavedHoursPerDay(answers.currentHours, answers.targetHours);
+  const lifetimeGain = getLifetimeReclaimedYears(
+    answers.currentHours,
+    answers.targetHours,
+  );
 
   return (
     <ScreenContainer showHeader={false} scroll>

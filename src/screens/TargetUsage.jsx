@@ -6,10 +6,12 @@ import {
 } from '../components/ui.jsx';
 import { HourSlider } from '../components/inputs.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
+import { getMaxTargetHours } from '../state/usageMath.js';
 
 export default function TargetUsage() {
   const { answers, set, next } = useOnboarding();
   const name = answers.name.trim();
+  const maxTarget = getMaxTargetHours(answers.currentHours);
   return (
     <ScreenContainer footer={<Button onClick={next}>Continue</Button>}>
       <PreHead>
@@ -19,6 +21,8 @@ export default function TargetUsage() {
       <HourSlider
         value={answers.targetHours}
         onChange={(v) => set('targetHours', v)}
+        min={0}
+        max={maxTarget}
         tone="cool"
       />
     </ScreenContainer>

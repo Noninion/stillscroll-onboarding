@@ -2,12 +2,13 @@
 
 /* Full-page background canvas */
 .web-stage {
-  min-height: 100svh;
-  min-height: 100dvh; /* fallback for browsers that support dvh */
+  min-height: var(--app-height, 100svh);
+  height: var(--app-height, 100dvh);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  overflow: hidden;
 }
 
 /* The app "shell" — full-viewport on mobile, a centered card on desktop */
@@ -15,8 +16,8 @@
   width: 100%;
   max-width: 430px;
   /* Fixed height so .screen { height: 100% } resolves correctly */
-  height: 100svh;
-  height: 100dvh;
+  height: var(--app-height, 100dvh);
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -39,6 +40,80 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
+}
+
+.screen-route {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-motion-text,
+.screen-motion-item {
+  will-change: opacity, transform;
+}
+
+.screen-route--pre-enter .screen__body {
+  visibility: hidden;
+}
+
+.screen-route--exit .screen-motion-text {
+  animation: screen-text-exit 257ms ease both;
+  animation-delay: var(--motion-exit-delay, 0ms);
+}
+
+.screen-route--exit .screen-motion-item {
+  animation: screen-item-exit 297ms ease both;
+  animation-delay: var(--motion-exit-delay, 277ms);
+}
+
+.screen-route--enter .screen-motion-item {
+  animation: screen-item-enter 317ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--motion-enter-delay, 0ms);
+}
+
+.screen-route--enter .screen-motion-text {
+  animation: screen-text-enter 297ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--motion-enter-delay, 337ms);
+}
+
+@keyframes screen-text-exit {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes screen-item-exit {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes screen-item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+@keyframes screen-text-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-route--exit .screen-motion-text,
+  .screen-route--exit .screen-motion-item,
+  .screen-route--enter .screen-motion-item,
+  .screen-route--enter .screen-motion-text {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
 }
 
 /* ===== Dev nav (LOCAL_DEV only) =====
@@ -120,7 +195,7 @@
   }
 
   .web-frame {
-    height: min(820px, calc(100svh - 96px));
+    height: min(820px, calc(var(--app-height, 100dvh) - 96px));
     border-radius: var(--r-xl);
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.06),
@@ -139,12 +214,14 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   width: 100%;
   /* Bottom padding respects the iOS home indicator */
   padding: var(--s-5) var(--s-6)
-    max(var(--s-6), env(safe-area-inset-bottom, var(--s-6)));
+    max(var(--s-6), calc(env(safe-area-inset-bottom, 0px) + var(--s-4)));
   position: relative;
   isolation: isolate;
+  overflow: hidden;
 }
 
 .screen::before {
@@ -205,15 +282,20 @@
   flex-direction: column;
   gap: var(--s-5);
   min-height: 0;
+  overflow: hidden;
 }
 
 .screen__body--scroll {
   overflow-y: auto;
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .screen__foot {
+  flex: 0 0 auto;
   padding-top: var(--s-4);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   display: flex;
   flex-direction: column;
   gap: var(--s-3);

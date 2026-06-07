@@ -8,6 +8,7 @@ import {
 } from '../components/ui.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
 import { shortGoalLabel } from '../state/options.js';
+import { getYearlySavedDays } from '../state/usageMath.js';
 import './Plan.css';
 
 const FEATURES = [
@@ -34,6 +35,10 @@ const TIMELINE = [
 
 export default function Plan() {
   const { answers, next } = useOnboarding();
+  const yearlySavedDays = getYearlySavedDays(
+    answers.currentHours,
+    answers.targetHours,
+  );
   const target = new Date();
   target.setDate(target.getDate() + 7);
   const targetStr = target.toLocaleDateString(undefined, {
@@ -73,7 +78,7 @@ export default function Plan() {
               <Bullet icon="◇">Healthier coping than scrolling</Bullet>
               <Bullet icon="∿">Feel 30% calmer</Bullet>
               <Bullet icon="⏳">
-                Save <span className="cool">30 days</span> this year
+                Save <span className="cool">{yearlySavedDays} days</span> this year
               </Bullet>
             </div>
           </Section>

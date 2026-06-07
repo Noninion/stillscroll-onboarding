@@ -9,19 +9,66 @@ import {
 } from '../components/ui.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
 import { submitToWaitlist } from '../api/waitlist.js';
+import {
+  analyticsPayload,
+  trackEmailStarted,
+  trackWaitlistSubmitFailed,
+  trackWaitlistSubmitted,
+} from '../analytics/index.js';
 import './EmailCapture.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function EmailCapture() {
-  const { answers, set, next } = useOnboarding();
+  const { answers, stepMeta, set, next } = useOnboarding();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailStarted, setEmailStarted] = useState(false);
   const inputRef = useRef(null);
 
   const name = answers.name.trim();
   const email = answers.email;
   const isValid = EMAIL_RE.test(email.trim());
+  const emailDomain = email.trim().split('@')[1]?.toLowerCase() ?? '';
+
+  function buildWaitlistPayload() {
+    return {
+      name,
+      email: email.trim(),
+      submittedAt: new Date().toISOString(),
+      goals: answers.goals,
+      currentHours: answers.currentHours,
+      targetHours: answers.targetHours,
+      distractingApps: answers.distractingApps,
+      hooks: answers.hooks,
+      emotions: answers.emotions,
+      ageBucket: answers.ageBucket,
+      pastAttempts: answers.pastAttempts,
+      attribution: analyticsPayload(),
+    };
+  }
+
+  function buildLeadAnalyticsPayload() {
+    return {
+      step_key: stepMeta.key,
+      step_index: stepMeta.index,
+      email_domain: emailDomain,
+      goals: answers.goals,
+      current_hours: answers.currentHours,
+      target_hours: answers.targetHours,
+      distracting_apps: answers.distractingApps,
+      hooks: answers.hooks,
+      emotions: answers.emotions,
+      age_bucket: answers.ageBucket,
+      past_attempts: answers.pastAttempts,
+    };
+  }
+
+  function markEmailStarted() {
+    if (emailStarted) return;
+    setEmailStarted(true);
+    trackEmailStarted(stepMeta);
+  }
 
   // Auto-focus the email field after a short delay so the keyboard doesn't
   // pop immediately and obscure the screen copy.
@@ -34,18 +81,19 @@ export default function EmailCapture() {
     if (!isValid || loading) return;
     setLoading(true);
     setError('');
+    const waitlistPayload = buildWaitlistPayload();
+    const analyticsPayload = buildLeadAnalyticsPayload();
+
     try {
-      await submitToWaitlist({
-        name,
-        email: email.trim(),
-        goals: answers.goals,
-        currentHours: answers.currentHours,
-        targetHours: answers.targetHours,
-        distractingApps: answers.distractingApps,
-      });
+      await submitToWaitlist(waitlistPayload);
+      trackWaitlistSubmitted(analyticsPayload);
       set('waitlistSubmitted', true);
       next();
-    } catch {
+    } catch (submitError) {
+      trackWaitlistSubmitFailed({
+        ...analyticsPayload,
+        error_message: submitError?.message ?? 'Unknown waitlist submit failure',
+      });
       setError('Something went wrong — please try again.');
       setLoading(false);
     }
@@ -124,7 +172,9 @@ export default function EmailCapture() {
           spellCheck={false}
           className={`ec__input${error ? ' ec__input--error' : ''}`}
           value={email}
+          onFocus={markEmailStarted}
           onChange={(e) => {
+            markEmailStarted();
             set('email', e.target.value);
             if (error) setError('');
           }}

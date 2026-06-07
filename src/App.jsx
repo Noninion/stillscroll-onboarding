@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { OnboardingProvider, useOnboarding } from './state/onboarding.jsx';
 import { STEPS } from './state/steps.js';
 import Splash from './screens/Splash.jsx';
@@ -23,6 +24,7 @@ import Calculating from './screens/Calculating.jsx';
 import Plan from './screens/Plan.jsx';
 import EmailCapture from './screens/EmailCapture.jsx';
 import WaitlistConfirmation from './screens/WaitlistConfirmation.jsx';
+import { initAnalytics, trackPageView } from './analytics/index.js';
 import './App.css';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -31,27 +33,94 @@ import './App.css';
 //  When true, a fixed dev-nav strip appears at the bottom of the viewport with
 //  Prev / Next / step indicator / jump-to-step controls.
 //
-//  Defaults to `import.meta.env.DEV` so it auto-shows in `npm run dev` and
-//  auto-hides in `npm run build`.  Hard-code to `true` or `false` to force
-//  either behavior (e.g. to preview the dev nav against a production build).
+//  Defaults to local Vite dev only. Set VITE_SHOW_DEV_NAV=true to force it
+//  for a local production-preview build.
 // ─────────────────────────────────────────────────────────────────────────────
-const LOCAL_DEV = import.meta.env.DEV;
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+const LOCAL_DEV =
+  typeof window !== 'undefined' &&
+  LOCAL_HOSTS.has(window.location.hostname) &&
+  (import.meta.env.DEV || import.meta.env.VITE_SHOW_DEV_NAV === 'true');
 
 export default function App() {
+  useVisualViewportVars();
+  useAnalyticsBootstrap();
+
   return (
     <OnboardingProvider>
-      {/* web-stage → web-frame → web-viewport mirrors the old
+      <AppShell />
+    </OnboardingProvider>
+  );
+}
+
+function useAnalyticsBootstrap() {
+  useEffect(() => {
+    initAnalytics();
+    trackPageView();
+  }, []);
+}
+
+function useVisualViewportVars() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const root = document.documentElement;
+    let frame = 0;
+
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const viewport = window.visualViewport;
+        const height = viewport?.height ?? window.innerHeight;
+        const width = viewport?.width ?? window.innerWidth;
+        const offsetTop = viewport?.offsetTop ?? 0;
+
+        root.style.setProperty('--app-height', `${Math.round(height)}px`);
+        root.style.setProperty('--app-width', `${Math.round(width)}px`);
+        root.style.setProperty('--app-offset-top', `${Math.round(offsetTop)}px`);
+      });
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('orientationchange', update);
+    window.visualViewport?.addEventListener('resize', update);
+    window.visualViewport?.addEventListener('scroll', update);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('resize', update);
+      window.removeEventListener('orientationchange', update);
+      window.visualViewport?.removeEventListener('resize', update);
+      window.visualViewport?.removeEventListener('scroll', update);
+    };
+  }, []);
+}
+
+function AppShell() {
+  const { transition } = useOnboarding();
+  const transitionClass =
+    transition.phase === 'idle'
+      ? ''
+      : ` screen-route--${transition.phase} screen-route--${transition.direction}`;
+  const choiceHoldClass = transition.holdChoices ? ' screen-route--choice-held' : '';
+
+  return (
+    <>
+      {/* web-stage -> web-frame -> web-viewport mirrors the old
           .stage → .phone → .phone__viewport hierarchy but without
           the visible device chrome.  All layout rules live in ui.css. */}
       <div className="web-stage">
         <div className="web-frame">
           <div className="web-viewport">
-            <CurrentScreen />
+            <div className={`screen-route${transitionClass}${choiceHoldClass}`}>
+              <CurrentScreen />
+            </div>
           </div>
         </div>
       </div>
       {LOCAL_DEV && <DevNav />}
-    </OnboardingProvider>
+    </>
   );
 }
 

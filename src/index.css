@@ -60,6 +60,10 @@
   --t-h1-lg: 30px;
   --t-mega: 72px;
 
+  --app-height: 100dvh;
+  --app-width: 100vw;
+  --app-offset-top: 0px;
+
   color-scheme: dark;
   color: var(--ink);
   background: #05070d;
@@ -83,8 +87,10 @@ body,
 #root {
   margin: 0;
   padding: 0;
-  /* Use small viewport height — stable even when mobile browser chrome is visible */
-  min-height: 100svh;
+  width: 100%;
+  height: var(--app-height, 100dvh);
+  min-height: var(--app-height, 100svh);
+  overflow: hidden;
 }
 
 body {

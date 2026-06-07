@@ -26,6 +26,7 @@ export default function Apps() {
       <H1>Which apps are taking most of your time?</H1>
       <Sub>Choose up to 3</Sub>
       <ChoiceList
+        className="choice-list--apps"
         options={APP_OPTIONS}
         value={answers.distractingApps}
         onChange={(v) => set('distractingApps', v)}

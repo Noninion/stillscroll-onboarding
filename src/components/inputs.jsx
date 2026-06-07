@@ -10,7 +10,7 @@ export function TextInput({ value, onChange, placeholder, autoFocus = false }) {
     <input
       ref={ref}
       type="text"
-      className="text-input"
+      className="text-input motion-item"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
@@ -29,6 +29,7 @@ export function ChoiceList({
   autoAdvance = false,
   onAutoAdvance,
   renderIcon,
+  className = '',
 }) {
   const isMulti = max > 1;
   const selected = isMulti ? value : value != null ? [value] : [];
@@ -36,7 +37,9 @@ export function ChoiceList({
   function toggle(optValue) {
     if (!isMulti) {
       onChange(optValue);
-      if (autoAdvance && onAutoAdvance) onAutoAdvance(optValue);
+      if (autoAdvance && onAutoAdvance) {
+        setTimeout(() => onAutoAdvance(optValue), 0);
+      }
       return;
     }
     const has = selected.includes(optValue);
@@ -49,7 +52,10 @@ export function ChoiceList({
   }
 
   return (
-    <div className="choice-list" role={isMulti ? 'group' : 'radiogroup'}>
+    <div
+      className={`choice-list motion-item${className ? ` ${className}` : ''}`}
+      role={isMulti ? 'group' : 'radiogroup'}
+    >
       {options.map((opt) => {
         const isSelected = selected.includes(opt.value);
         const atCap = isMulti && !isSelected && selected.length >= max;
@@ -79,9 +85,10 @@ export function ChoiceList({
 }
 
 export function HourSlider({ value, onChange, tone = 'cool', min = 1, max = 12 }) {
-  const fill = ((value - min) / (max - min)) * 100;
+  const range = max - min;
+  const fill = range > 0 ? ((value - min) / range) * 100 : 100;
   return (
-    <div className="slider">
+    <div className="slider motion-item">
       <div
         className={`slider__value slider__value--${tone}`}
         aria-hidden="true"

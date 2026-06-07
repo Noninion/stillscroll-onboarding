@@ -6,16 +6,15 @@ import {
   FooterNote,
 } from '../components/ui.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
-
-const LIFESPAN_YEARS = 85;
+import { getLifetimeReclaimedYears } from '../state/usageMath.js';
 
 export default function Reframe() {
   const { answers, next } = useOnboarding();
-  const saved = Math.max(0, answers.currentHours - answers.targetHours);
-  const lifetimeGain = Math.round((saved * LIFESPAN_YEARS) / 24);
-  const display = lifetimeGain > 0 ? lifetimeGain : 1;
-  const unit = display === 1 ? 'year' : 'years';
-  const suffix = lifetimeGain > 0 ? '+' : '';
+  const lifetimeGain = getLifetimeReclaimedYears(
+    answers.currentHours,
+    answers.targetHours,
+  );
+  const unit = lifetimeGain === 1 ? 'year' : 'years';
 
   return (
     <ScreenContainer
@@ -33,8 +32,7 @@ export default function Reframe() {
       >
         <H1 lg>Stillscroll can give you back</H1>
         <p className="mega cool">
-          {display} {unit}
-          {suffix}
+          {lifetimeGain} {unit}+
         </p>
         <Body>of your life, undistracted.</Body>
         <FooterNote>

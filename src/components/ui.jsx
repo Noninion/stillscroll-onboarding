@@ -1,6 +1,10 @@
 import { useOnboarding } from '../state/onboarding.jsx';
 import './ui.css';
 
+function joinClass(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export function PhoneFrame({ children }) {
   return (
     <div className="phone" role="presentation">
@@ -36,7 +40,7 @@ export function ScreenContainer({
           {showBack && (
             <button
               type="button"
-              className="back-btn"
+              className="back-btn motion-item"
               onClick={handleBack}
               disabled={isFirst && !onBack}
               aria-label="Back"
@@ -48,7 +52,7 @@ export function ScreenContainer({
             <ProgressBar value={progressValue} />
           ) : section ? (
             <>
-              <span className="screen__section">{section}</span>
+              <span className="screen__section motion-text">{section}</span>
               {/* Spacer matches back-btn width so the label visually centers */}
               {showBack && <span className="screen__head-spacer" aria-hidden="true" />}
             </>
@@ -67,7 +71,7 @@ export function ProgressBar({ value }) {
   const clamped = Math.max(0, Math.min(100, value));
   return (
     <div
-      className="progress"
+      className="progress motion-item"
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}
@@ -79,59 +83,66 @@ export function ProgressBar({ value }) {
 }
 
 export function PreHead({ children }) {
-  return <p className="pre-head">{children}</p>;
+  return <p className="pre-head motion-text">{children}</p>;
 }
 
 export function H1({ children, lg = false }) {
-  return <h1 className={`h1${lg ? ' h1--lg' : ''}`}>{children}</h1>;
+  return <h1 className={joinClass('h1 motion-text', lg && 'h1--lg')}>{children}</h1>;
 }
 
 export function H2({ children }) {
-  return <h2 className="h2">{children}</h2>;
+  return <h2 className="h2 motion-text">{children}</h2>;
 }
 
 export function Sub({ children }) {
-  return <p className="sub">{children}</p>;
+  return <p className="sub motion-text">{children}</p>;
 }
 
 export function Body({ children }) {
-  return <p className="body">{children}</p>;
+  return <p className="body motion-text">{children}</p>;
 }
 
 export function FooterNote({ children }) {
-  return <p className="footer-note">{children}</p>;
+  return <p className="footer-note motion-text">{children}</p>;
 }
 
 export function Button({
   children,
   variant = 'primary',
   type = 'button',
+  disabled,
   ...rest
 }) {
+  const { transition } = useOnboarding();
   const cls =
     variant === 'ghost'
-      ? 'btn btn--ghost'
+      ? 'btn btn--ghost motion-item'
       : variant === 'text'
-        ? 'btn btn--text'
-        : 'btn';
+        ? 'btn btn--text motion-item'
+        : 'btn motion-item';
   return (
-    <button type={type} className={cls} {...rest}>
+    <button
+      type={type}
+      className={cls}
+      disabled={disabled || transition.isNavigating}
+      {...rest}
+    >
       {children}
     </button>
   );
 }
 
 export function Chip({ tone = 'cool', children }) {
-  return <span className={`chip chip--${tone}`}>{children}</span>;
+  return <span className={`chip chip--${tone} motion-item`}>{children}</span>;
 }
 
 export function ChipRow({ children }) {
-  return <div className="chip-row">{children}</div>;
+  return <div className="chip-row motion-item">{children}</div>;
 }
 
 export function Stars({ count = 5 }) {
   return (
-    <span className="stars" aria-label={`${count} out of 5 stars`}>
+    <span className="stars motion-item" aria-label={`${count} out of 5 stars`}>
       {Array.from({ length: count }).map((_, i) => (
         <span key={i} aria-hidden="true">
           ★
@@ -143,7 +154,7 @@ export function Stars({ count = 5 }) {
 
 export function Testimonial({ quote, attribution }) {
   return (
-    <figure className="testimonial">
+    <figure className="testimonial motion-item">
       <Stars />
       <blockquote>{quote}</blockquote>
       {attribution && <figcaption>— {attribution}</figcaption>}
@@ -153,7 +164,7 @@ export function Testimonial({ quote, attribution }) {
 
 export function ResearchCard({ title = 'The Research', children }) {
   return (
-    <aside className="research">
+    <aside className="research motion-item">
       <span className="research__icon" aria-hidden="true">
         ◇
       </span>
@@ -167,7 +178,7 @@ export function ResearchCard({ title = 'The Research', children }) {
 
 export function AppIcon({ app, size = 'md' }) {
   if (!app) return null;
-  const cls = size === 'lg' ? 'app-icon app-icon--lg' : 'app-icon';
+  const cls = size === 'lg' ? 'app-icon app-icon--lg motion-item' : 'app-icon motion-item';
   return (
     <span
       className={cls}
@@ -181,7 +192,7 @@ export function AppIcon({ app, size = 'md' }) {
 
 export function BigNum({ value, label }) {
   return (
-    <div className="bignum">
+    <div className="bignum motion-item">
       <span className="bignum__num">{value}</span>
       {label && <span className="bignum__label">{label}</span>}
     </div>
@@ -189,7 +200,7 @@ export function BigNum({ value, label }) {
 }
 
 export function Divider() {
-  return <div className="divider" role="separator" />;
+  return <div className="divider motion-item" role="separator" />;
 }
 
 export function Stub({ title }) {

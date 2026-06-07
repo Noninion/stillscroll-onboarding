@@ -9,7 +9,11 @@
   border-radius: var(--r-md);
   font-size: 18px;
   color: var(--ink);
-  transition: border-color 160ms ease, background 160ms ease;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    opacity 200ms ease,
+    transform 333ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .text-input::placeholder {
   color: var(--ink-mute);
@@ -25,6 +29,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
+  position: relative;
 }
 
 .choice {
@@ -41,6 +46,7 @@
   font-size: 16px;
   line-height: 1.35;
   transition: border-color 160ms ease, background 160ms ease;
+  will-change: opacity, transform;
 }
 .choice:hover:not(:disabled) {
   border-color: var(--border-strong);
@@ -69,6 +75,75 @@
   border-color: var(--cool);
   background: var(--cool);
   color: #06121a;
+}
+
+.choice-list--apps .choice--selected {
+  border-color: var(--cool-line);
+  background:
+    linear-gradient(90deg, rgba(76, 188, 188, 0.14), transparent 38%),
+    var(--cool-soft);
+}
+
+.choice-list--apps .choice--selected .app-icon {
+  border-color: var(--cool-strong);
+  color: #ffffff;
+  filter: brightness(1.45) saturate(1.2);
+  box-shadow:
+    0 0 0 1px rgba(76, 188, 188, 0.3),
+    0 0 18px rgba(76, 188, 188, 0.22);
+}
+
+.screen-route--choice-fade .choice-list,
+.screen-route--choice-stack .choice-list,
+.screen-route--choice-held .choice-list {
+  min-height: min(360px, 52vh);
+}
+
+.screen-route--choice-fade .choice:not(.choice--selected) {
+  animation: choice-fade-away 277ms ease both;
+}
+
+.screen-route--choice-stack .choice:not(.choice--selected),
+.screen-route--choice-held .choice:not(.choice--selected) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.screen-route--choice-stack .choice--selected {
+  z-index: 2;
+  animation: choice-stack-center 410ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.screen-route--choice-held .choice--selected {
+  z-index: 2;
+  transform: translateY(var(--choice-stack-offset, 0px)) scale(0.98);
+}
+
+@keyframes choice-fade-away {
+  to {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes choice-stack-center {
+  from {
+    transform: translateY(0) scale(1);
+  }
+  to {
+    transform: translateY(var(--choice-stack-offset, 0px)) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-route--choice-fade .choice:not(.choice--selected),
+  .screen-route--choice-stack .choice--selected {
+    animation-duration: 1ms;
+  }
+
+  .choice {
+    transition-duration: 1ms;
+  }
 }
 
 /* ===== Slider ===== */
