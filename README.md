@@ -122,7 +122,6 @@ These events include:
 content_id
 content_type=product
 content_name
-value=0
 currency=USD
 event_id=<event_id>
 ```

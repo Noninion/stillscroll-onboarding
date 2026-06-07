@@ -444,7 +444,6 @@ function standardTikTokEvent(name, properties, content, eventId) {
     name,
     parameters: {
       contents: [content],
-      value: 0,
       currency: 'USD',
     },
     options: {
