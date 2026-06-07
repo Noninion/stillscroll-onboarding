@@ -1,16 +1,87 @@
-# React + Vite
+# Stillscroll Onboarding
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vite/React onboarding funnel for the Stillscroll waitlist.
 
-Currently, two official plugins are available:
+## Local Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install dependencies:
 
-## React Compiler
+```bash
+npm install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Run the app:
 
-## Expanding the ESLint configuration
+```bash
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Open:
+
+```txt
+http://localhost:5173/
+```
+
+## Test Waitlist Submission Locally
+
+Use the mock waitlist server when you want to test the browser submission flow without sending a real subscriber to Kit/ConvertKit.
+
+In terminal 1:
+
+```bash
+npm run dev:mock-waitlist
+```
+
+This starts:
+
+```txt
+http://127.0.0.1:8787/api/waitlist
+```
+
+In terminal 2, start Vite:
+
+```bash
+npm run dev
+```
+
+Submit the funnel email form. You should see:
+
+- a `POST` request to `http://localhost:5173/api/waitlist` in browser Network tools
+- `[waitlist] submit_success` in the browser console when debug logging is enabled
+- `[mock-waitlist] received submission` in terminal 1
+
+Optional: choose a different mock port:
+
+```bash
+MOCK_WAITLIST_PORT=8790 npm run dev:mock-waitlist
+MOCK_WAITLIST_TARGET=http://127.0.0.1:8790 npm run dev
+```
+
+## Production Waitlist
+
+Vercel uses:
+
+```txt
+api/waitlist.js
+```
+
+Required Vercel environment variable:
+
+```txt
+KIT_API_KEY=your_kit_v4_api_key
+```
+
+In production, the frontend defaults to:
+
+```txt
+/api/waitlist
+```
+
+So `VITE_WAITLIST_ENDPOINT` is optional for production.
+
+## Checks
+
+```bash
+npm run lint
+npm run build
+```

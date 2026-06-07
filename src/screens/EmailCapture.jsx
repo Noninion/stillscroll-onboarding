@@ -11,6 +11,7 @@ import { useOnboarding } from '../state/onboarding.jsx';
 import { submitToWaitlist } from '../api/waitlist.js';
 import {
   analyticsPayload,
+  identifyLead,
   trackEmailStarted,
   trackWaitlistSubmitFailed,
   trackWaitlistSubmitted,
@@ -86,6 +87,11 @@ export default function EmailCapture() {
 
     try {
       await submitToWaitlist(waitlistPayload);
+      identifyLead({
+        email: email.trim(),
+        name,
+        properties: analyticsPayload,
+      });
       trackWaitlistSubmitted(analyticsPayload);
       set('waitlistSubmitted', true);
       next();

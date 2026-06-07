@@ -49,6 +49,16 @@ function getMixpanelDistinctId() {
   }
 }
 
+function setMixpanelDistinctId(distinctId) {
+  if (typeof window === 'undefined' || !distinctId) return;
+
+  try {
+    window.localStorage.setItem(DISTINCT_ID_KEY, distinctId);
+  } catch {
+    // Local storage can fail in private browsing; identity should still proceed.
+  }
+}
+
 function mixpanelEventPayload(eventName, properties) {
   const eventId = properties.event_id ?? createId(eventName);
 
@@ -61,6 +71,14 @@ function mixpanelEventPayload(eventName, properties) {
       time: Math.floor(Date.now() / 1000),
       $insert_id: properties.$insert_id ?? eventId,
     },
+  };
+}
+
+function mixpanelEngagePayload(operation, properties) {
+  return {
+    $token: ANALYTICS_CONFIG.mixpanelToken,
+    $distinct_id: properties.distinct_id ?? getMixpanelDistinctId(),
+    [operation]: properties,
   };
 }
 
@@ -106,6 +124,40 @@ function sendDirectMixpanelTrack(eventName, properties) {
     .catch((error) => {
       debugLog('mixpanel_direct_track_failed', {
         eventName,
+        message: error?.message ?? String(error),
+      });
+    });
+}
+
+function sendDirectMixpanelEngage(operation, properties) {
+  if (!ANALYTICS_CONFIG.mixpanelToken || typeof fetch === 'undefined') return;
+
+  const url = `${ANALYTICS_CONFIG.mixpanelApiHost.replace(/\/$/, '')}/engage?verbose=1`;
+  const payload = [mixpanelEngagePayload(operation, properties)];
+  const body = `data=${encodeURIComponent(encodeMixpanelData(payload))}`;
+
+  debugLog('mixpanel_direct_engage_called', {
+    operation,
+    url,
+    distinctId: properties.distinct_id,
+  });
+
+  fetch(url, {
+    method: 'POST',
+    body: new Blob([body], { type: 'application/x-www-form-urlencoded' }),
+    keepalive: true,
+  })
+    .then(async (response) => {
+      const body = await response.text().catch(() => '');
+      debugLog('mixpanel_direct_engage_response', {
+        operation,
+        status: response.status,
+        body,
+      });
+    })
+    .catch((error) => {
+      debugLog('mixpanel_direct_engage_failed', {
+        operation,
         message: error?.message ?? String(error),
       });
     });
@@ -311,4 +363,33 @@ export function sendToVendors(eventName, properties = {}) {
       }).catch((error) => debugLog('event_endpoint_failed', error));
     }
   }
+}
+
+export function identifyMixpanelUser(distinctId, profile = {}) {
+  if (!ANALYTICS_CONFIG.mixpanelToken || typeof window === 'undefined' || !distinctId) {
+    return;
+  }
+
+  const previousDistinctId = getMixpanelDistinctId();
+  const profileProperties = {
+    ...profile,
+    distinct_id: distinctId,
+    $email: profile.email ?? distinctId,
+  };
+
+  debugLog('mixpanel_identify_called', {
+    distinctId,
+    previousDistinctId,
+    sdkReady: Boolean(window.mixpanel?.__loaded),
+  });
+
+  if (window.mixpanel?.alias && previousDistinctId !== distinctId) {
+    window.mixpanel.alias(distinctId, previousDistinctId);
+  }
+
+  window.mixpanel?.identify?.(distinctId);
+  window.mixpanel?.people?.set?.(profileProperties);
+  setMixpanelDistinctId(distinctId);
+
+  sendDirectMixpanelEngage('$set', profileProperties);
 }

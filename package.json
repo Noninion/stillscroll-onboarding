@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mock-waitlist": "node scripts/mock-waitlist-server.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
