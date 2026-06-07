@@ -14,12 +14,19 @@ function getKitConfig() {
 }
 
 export default async function handler(req, res) {
+  console.log('[waitlist-api] request_received', {
+    method: req.method,
+    hasBody: Boolean(req.body),
+  });
+
   if (req.method !== 'POST') {
+    console.log('[waitlist-api] method_not_allowed', { method: req.method });
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { apiKey } = getKitConfig();
   if (!apiKey) {
+    console.error('[waitlist-api] missing_kit_api_key');
     return res.status(500).json({
       error: 'Kit waitlist integration is not configured',
     });
@@ -36,8 +43,16 @@ export default async function handler(req, res) {
   const cleanName = String(name).trim();
 
   if (!cleanEmail) {
+    console.log('[waitlist-api] missing_email');
     return res.status(400).json({ error: 'Email is required' });
   }
+
+  console.log('[waitlist-api] kit_subscribe_start', {
+    emailDomain: cleanEmail.split('@')[1] ?? '',
+    hasName: Boolean(cleanName),
+    answerKeys: Object.keys(answers),
+    attributionKeys: Object.keys(attribution),
+  });
 
   const fields = {
     source: 'stillscroll_waitlist',
@@ -71,7 +86,18 @@ export default async function handler(req, res) {
   });
   const body = await response.json().catch(() => ({}));
 
+  console.log('[waitlist-api] kit_subscribe_response', {
+    status: response.status,
+    ok: response.ok,
+    subscriberId: body?.subscriber?.id,
+    warnings: body?.warnings,
+  });
+
   if (!response.ok) {
+    console.error('[waitlist-api] kit_subscribe_failed', {
+      status: response.status,
+      body,
+    });
     return res.status(response.status).json({
       error: 'Kit subscribe request failed',
       details: body,
