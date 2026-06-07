@@ -4,8 +4,9 @@ export const ANALYTICS_CONFIG = {
   mixpanelApiHost: import.meta.env.VITE_MIXPANEL_API_HOST ?? 'https://api.mixpanel.com',
   gaMeasurementId: import.meta.env.VITE_GA_MEASUREMENT_ID ?? '',
   metaPixelId: import.meta.env.VITE_META_PIXEL_ID ?? '',
-  tiktokPixelId: import.meta.env.VITE_TIKTOK_PIXEL_ID ?? '',
+  tiktokPixelId: import.meta.env.VITE_TIKTOK_PIXEL_ID ?? 'D8INNQJC77UFV4UICA50',
   eventEndpoint: import.meta.env.VITE_ANALYTICS_EVENT_ENDPOINT ?? '',
+  siteDomain: import.meta.env.VITE_PUBLIC_SITE_DOMAIN ?? '',
 };
 
 export function hasAnalyticsConfig() {

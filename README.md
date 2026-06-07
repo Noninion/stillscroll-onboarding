@@ -79,6 +79,41 @@ In production, the frontend defaults to:
 
 So `VITE_WAITLIST_ENDPOINT` is optional for production.
 
+## TikTok Ads
+
+Set the production domain in Vercel:
+
+```txt
+VITE_PUBLIC_SITE_DOMAIN=your-production-domain.com
+VITE_TIKTOK_PIXEL_ID=D8INNQJC77UFV4UICA50
+```
+
+Generate the TikTok destination URL:
+
+```bash
+VITE_PUBLIC_SITE_DOMAIN=your-production-domain.com npm run ads:tiktok-url
+```
+
+Use the printed URL as the TikTok ad destination. It includes:
+
+```txt
+utm_source=tiktok
+utm_medium=paid_social
+utm_campaign=__CAMPAIGN_NAME__
+utm_id=__CAMPAIGN_ID__
+utm_content=__CID_NAME__
+utm_term=__AID_NAME__
+utm_placement=__PLACEMENT__
+```
+
+The app captures these params automatically for Mixpanel, Kit waitlist payloads, and conversion metadata.
+
+Waitlist submit is sent to TikTok as the standard conversion event:
+
+```txt
+Lead
+```
+
 ## Checks
 
 ```bash

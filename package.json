@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:mock-waitlist": "node scripts/mock-waitlist-server.mjs",
+    "ads:tiktok-url": "node scripts/tiktok-ad-url.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

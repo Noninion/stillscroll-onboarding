@@ -1,5 +1,5 @@
 import { captureAttribution, getAttribution } from './attribution.js';
-import { hasAnalyticsConfig } from './config.js';
+import { ANALYTICS_CONFIG, hasAnalyticsConfig } from './config.js';
 import {
   initGoogleAnalytics,
   initMetaPixel,
@@ -22,6 +22,7 @@ function runtimeMetadata() {
     viewport_width: window.innerWidth,
     viewport_height: window.innerHeight,
     user_agent: window.navigator.userAgent,
+    site_domain: ANALYTICS_CONFIG.siteDomain,
   };
 }
 

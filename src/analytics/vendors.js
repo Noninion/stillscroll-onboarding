@@ -285,26 +285,70 @@ export function initMetaPixel() {
 export function initTikTokPixel() {
   const pixelId = ANALYTICS_CONFIG.tiktokPixelId;
   if (!pixelId || typeof window === 'undefined') return;
+  if (window.__STILLSCROLL_TIKTOK_PIXEL_BOOTSTRAPPED) {
+    debugLog('tiktok_pixel_already_bootstrapped', { pixelId });
+    return;
+  }
 
-  window.ttq =
-    window.ttq ||
-    {
-      queue: [],
-      load(id) {
-        this.queue.push(['load', id]);
-      },
-      page() {
-        this.queue.push(['page']);
-      },
-      track(...args) {
-        this.queue.push(['track', ...args]);
-      },
-    };
+  installTikTokSnippet('ttq');
   window.ttq.load(pixelId);
+  window.ttq.page();
+  window.__STILLSCROLL_TIKTOK_PIXEL_BOOTSTRAPPED = true;
+}
 
-  loadScript('https://analytics.tiktok.com/i18n/pixel/events.js', 'tiktok-pixel-sdk').catch(
-    (error) => debugLog('tiktok_load_failed', error),
-  );
+function installTikTokSnippet(queueName) {
+  if (window.ttq?.load && window.TiktokAnalyticsObject === queueName) return;
+
+  window.TiktokAnalyticsObject = queueName;
+  const ttq = (window[queueName] = window[queueName] || []);
+  ttq.methods = [
+    'page',
+    'track',
+    'identify',
+    'instances',
+    'debug',
+    'on',
+    'off',
+    'once',
+    'ready',
+    'alias',
+    'group',
+    'enableCookie',
+    'disableCookie',
+    'holdConsent',
+    'revokeConsent',
+    'grantConsent',
+  ];
+  ttq.setAndDefer = function setAndDefer(target, method) {
+    target[method] = function deferredMethod(...args) {
+      target.push([method].concat(args));
+    };
+  };
+  ttq.methods.forEach((method) => ttq.setAndDefer(ttq, method));
+  ttq.instance = function instance(pixelId) {
+    const instanceQueue = ttq._i?.[pixelId] || [];
+    ttq.methods.forEach((method) => ttq.setAndDefer(instanceQueue, method));
+    return instanceQueue;
+  };
+  ttq.load = function load(pixelId, options) {
+    const scriptUrl = 'https://analytics.tiktok.com/i18n/pixel/events.js';
+    ttq._i = ttq._i || {};
+    ttq._i[pixelId] = [];
+    ttq._i[pixelId]._u = scriptUrl;
+    ttq._t = ttq._t || {};
+    ttq._t[pixelId] = Date.now();
+    ttq._o = ttq._o || {};
+    ttq._o[pixelId] = options || {};
+
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = `${scriptUrl}?sdkid=${pixelId}&lib=${queueName}`;
+    script.onerror = (error) => debugLog('tiktok_load_failed', error);
+
+    const firstScript = document.getElementsByTagName('script')[0];
+    firstScript.parentNode.insertBefore(script, firstScript);
+  };
 }
 
 export function sendToVendors(eventName, properties = {}) {
@@ -343,7 +387,7 @@ export function sendToVendors(eventName, properties = {}) {
     }
 
     if (window.ttq) {
-      const tikTokEventName = eventName === 'waitlist_submitted' ? 'SubmitForm' : eventName;
+      const tikTokEventName = eventName === 'waitlist_submitted' ? 'Lead' : eventName;
       window.ttq.track?.(tikTokEventName, properties);
     }
   }
