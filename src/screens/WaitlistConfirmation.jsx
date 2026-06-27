@@ -57,10 +57,10 @@ export default function WaitlistConfirmation() {
           </div>
           <div className="wc__discount-body">
             <span className="wc__discount-price">
-              $17.99<span className="wc__discount-unit">/yr</span>
+              $0<span className="wc__discount-unit">/yr</span>
             </span>
             <div className="wc__discount-detail">
-              <span className="wc__discount-pill">40% off</span>
+              <span className="wc__discount-pill">100% off</span>
               <span className="wc__discount-orig">
                 {cleanLaunchCopy ? 'planned launch offer $29.99/yr' : 'normally $29.99/yr'}
               </span>

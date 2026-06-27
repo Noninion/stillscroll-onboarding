@@ -19,6 +19,11 @@ export default function Splash() {
     <div className="splash">
       <div className="splash__brand">Stillscroll</div>
 
+      <h1 className="splash__title">
+        Replace <span className="warm">Doomscrolling</span> with{' '}
+        <span className="cool">Stillness</span>.
+      </h1>
+
       <div className="splash__hero">
         <div className="mock" aria-hidden="true">
           <div className={`mock__slide${slide === 0 ? ' mock__slide--active' : ''}`}>
@@ -48,11 +53,6 @@ export default function Splash() {
           />
         ))}
       </div>
-
-      <h1 className="splash__title">
-        Replace <span className="warm">Doomscrolling</span> with{' '}
-        <span className="cool">Stillness</span>.
-      </h1>
 
       <Button onClick={next} style={{ width: '100%' }}>
         Get Started

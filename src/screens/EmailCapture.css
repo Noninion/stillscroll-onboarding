@@ -163,6 +163,11 @@
   gap: var(--s-3);
 }
 
+.ec__app-store-link {
+  width: 100%;
+  text-decoration: none;
+}
+
 .ec__error {
   font-size: 13px;
   color: var(--warm-strong);

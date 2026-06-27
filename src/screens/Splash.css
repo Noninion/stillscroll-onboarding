@@ -13,8 +13,9 @@
 }
 
 .splash__brand {
+  margin-top: -10px;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 14px;
   letter-spacing: -0.005em;
   font-weight: 600;
   color: var(--ink);
@@ -151,12 +152,14 @@
 
 .splash__title {
   font-family: var(--font-display);
-  font-size: 26px;
-  line-height: 1.2;
+  font-size: 32px;
+  line-height: 1.08;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   color: var(--ink);
-  max-width: 280px;
+  max-width: 340px;
+  margin: 0;
+  margin-top: -16px;
 }
 
 .splash .btn {

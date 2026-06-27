@@ -12,6 +12,7 @@ import { submitToWaitlist } from '../api/waitlist.js';
 import {
   analyticsPayload,
   identifyLead,
+  trackEvent,
   trackEmailStarted,
   trackWaitlistSubmitFailed,
   trackWaitlistSubmitted,
@@ -20,6 +21,19 @@ import { FEATURE_FLAGS } from '../config/features.js';
 import './EmailCapture.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const APP_STORE_URL =
+  'https://apps.apple.com/il/app/stillscroll-breathe-to-scroll/id6780034589';
+
+function isIosDevice() {
+  if (typeof window === 'undefined') return false;
+
+  const { maxTouchPoints, platform, userAgent } = window.navigator;
+
+  return (
+    /iPad|iPhone|iPod/.test(userAgent) ||
+    (platform === 'MacIntel' && maxTouchPoints > 1)
+  );
+}
 
 export default function EmailCapture() {
   const { answers, stepMeta, set, next } = useOnboarding();
@@ -28,6 +42,7 @@ export default function EmailCapture() {
   const [emailStarted, setEmailStarted] = useState(false);
   const inputRef = useRef(null);
   const cleanLaunchCopy = FEATURE_FLAGS.cleanLaunchCopy;
+  const isIos = isIosDevice();
 
   const name = answers.name.trim();
   const email = answers.email;
@@ -76,9 +91,11 @@ export default function EmailCapture() {
   // Auto-focus the email field after a short delay so the keyboard doesn't
   // pop immediately and obscure the screen copy.
   useEffect(() => {
+    if (isIos) return undefined;
+
     const id = setTimeout(() => inputRef.current?.focus(), 380);
     return () => clearTimeout(id);
-  }, []);
+  }, [isIos]);
 
   async function handleSubmit() {
     if (!isValid || loading) return;
@@ -111,38 +128,65 @@ export default function EmailCapture() {
     if (e.key === 'Enter') handleSubmit();
   }
 
+  function handleAppStoreClick() {
+    trackEvent('app_store_clicked', {
+      step_key: stepMeta.key,
+      step_index: stepMeta.index,
+      destination: 'app_store',
+      platform: 'ios',
+    });
+  }
+
   return (
     <ScreenContainer
       showBack={!loading}
       footer={
         <div className="ec__footer">
-          {error && (
+          {!isIos && error && (
             <p className="ec__error" role="alert">
               {error}
             </p>
           )}
-          <Button
-            onClick={handleSubmit}
-            disabled={!isValid || loading}
-            style={{ width: '100%' }}
-          >
-            {loading ? (
-              <span className="ec__spinner-wrap">
-                <Spinner /> {cleanLaunchCopy ? 'Joining waitlist…' : 'Saving your spot…'}
-              </span>
-            ) : (
-              cleanLaunchCopy ? 'Join Early-Access Waitlist →' : 'Claim Early-Bird Spot →'
-            )}
-          </Button>
+          {isIos ? (
+            <a
+              className="btn motion-item ec__app-store-link"
+              href={APP_STORE_URL}
+              onClick={handleAppStoreClick}
+            >
+              Open in App Store →
+            </a>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={!isValid || loading}
+              style={{ width: '100%' }}
+            >
+              {loading ? (
+                <span className="ec__spinner-wrap">
+                  <Spinner /> {cleanLaunchCopy ? 'Joining waitlist…' : 'Saving your spot…'}
+                </span>
+              ) : (
+                cleanLaunchCopy ? 'Join Early-Access Waitlist →' : 'Claim Early-Bird Spot →'
+              )}
+            </Button>
+          )}
           <FooterNote style={{ textAlign: 'center' }}>
-            🔒 No spam. Unsubscribe any time.
+            {isIos ? (
+              'No email needed. Continue through the App Store.'
+            ) : (
+              '🔒 No spam. Unsubscribe any time.'
+            )}
           </FooterNote>
         </div>
       }
     >
       {/* ── Header ── */}
       <PreHead>Your plan is ready{name ? `, ${name}` : ''}.</PreHead>
-      {cleanLaunchCopy ? (
+      {isIos ? (
+        <H1>
+          Get <span className="cool">Stillscroll</span> on the App Store.
+        </H1>
+      ) : cleanLaunchCopy ? (
         <H1>
           Join the early-access waitlist for{' '}
           <span className="cool">Stillscroll.</span>
@@ -157,7 +201,9 @@ export default function EmailCapture() {
       {/* ── Early-bird badge ── */}
       <div className="ec__badge">
         <span className="ec__badge-pill">
-          {cleanLaunchCopy ? (
+          {isIos ? (
+            'Available now for iPhone'
+          ) : cleanLaunchCopy ? (
             'Early-access app waitlist'
           ) : (
             <>
@@ -167,50 +213,62 @@ export default function EmailCapture() {
         </span>
         <div className="ec__badge-row">
           <span className="ec__badge-price">
-            <span className="ec__badge-new">$17.99<span className="ec__badge-unit">/yr</span></span>
+            <span className="ec__badge-new">$0<span className="ec__badge-unit">/yr</span></span>
             <span className="ec__badge-was">
-              {cleanLaunchCopy ? 'planned founding price' : 'was $29.99'}
+              {isIos
+                ? 'App Store listing'
+                : cleanLaunchCopy
+                  ? 'planned founding price'
+                  : 'was $29.99'}
             </span>
           </span>
           <span className="ec__badge-tag">
-            {cleanLaunchCopy ? 'Mobile app first' : '40% off at launch'}
+            {isIos
+              ? 'iOS'
+              : cleanLaunchCopy
+                ? 'Mobile app first'
+                : '40% off at launch'}
           </span>
         </div>
         <p className="ec__badge-note">
-          {cleanLaunchCopy
-            ? 'You will get product updates, launch timing, and first access when Stillscroll opens to early users.'
-            : 'Your discount is locked in the moment you join — no strings attached.'}
+          {isIos
+            ? 'Install Stillscroll directly from the App Store and start from there.'
+            : cleanLaunchCopy
+              ? 'You will get product updates, launch timing, and first access when Stillscroll opens to early users.'
+              : 'Your discount is locked in the moment you join — no strings attached.'}
         </p>
       </div>
 
       {/* ── Email input ── */}
-      <div className="ec__field">
-        <label className="ec__label" htmlFor="ec-email">
-          Your email address
-        </label>
-        <input
-          ref={inputRef}
-          id="ec-email"
-          type="email"
-          inputMode="email"
-          autoComplete="email"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          className={`ec__input${error ? ' ec__input--error' : ''}`}
-          value={email}
-          onFocus={markEmailStarted}
-          onChange={(e) => {
-            markEmailStarted();
-            set('email', e.target.value);
-            if (error) setError('');
-          }}
-          onKeyDown={handleKeyDown}
-          placeholder="you@example.com"
-          aria-describedby={error ? 'ec-error' : undefined}
-          disabled={loading}
-        />
-      </div>
+      {!isIos && (
+        <div className="ec__field">
+          <label className="ec__label" htmlFor="ec-email">
+            Your email address
+          </label>
+          <input
+            ref={inputRef}
+            id="ec-email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            className={`ec__input${error ? ' ec__input--error' : ''}`}
+            value={email}
+            onFocus={markEmailStarted}
+            onChange={(e) => {
+              markEmailStarted();
+              set('email', e.target.value);
+              if (error) setError('');
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder="you@example.com"
+            aria-describedby={error ? 'ec-error' : undefined}
+            disabled={loading}
+          />
+        </div>
+      )}
 
       {/* ── Scarcity nudge ── */}
       <SpotCounter />
