@@ -1,6 +1,8 @@
 import {
   Button,
   ScreenContainer,
+  H1,
+  Body,
   BigNum,
   Chip,
   ChipRow,
@@ -8,6 +10,7 @@ import {
 } from '../components/ui.jsx';
 import { useOnboarding } from '../state/onboarding.jsx';
 import { shortGoalLabel } from '../state/options.js';
+import { FEATURE_FLAGS } from '../config/features.js';
 
 export default function SocialProof() {
   const { answers, next } = useOnboarding();
@@ -27,7 +30,20 @@ export default function SocialProof() {
           padding: 'var(--s-6) 0',
         }}
       >
-        <BigNum value="1,000,000+" label="people started here too" />
+        {FEATURE_FLAGS.cleanLaunchCopy ? (
+          <>
+            <BigNum value="Early access" label="for people ready to pause before they scroll" />
+            <H1>
+              You are building the first version with us.
+            </H1>
+            <Body>
+              Stillscroll is opening to early users first, so the product can
+              learn from real screen-time patterns instead of generic advice.
+            </Body>
+          </>
+        ) : (
+          <BigNum value="1,000,000+" label="people started here too" />
+        )}
         {answers.goals.length > 0 && (
           <ChipRow>
             {answers.goals.map((g) => (
@@ -37,10 +53,12 @@ export default function SocialProof() {
             ))}
           </ChipRow>
         )}
-        <Testimonial
-          quote="I haven't quit anything. I just have to breathe for a minute before the app opens — and half the time, by the time I'm done, I've forgotten what I picked up the phone for."
-          attribution="Beta tester, 6 weeks in"
-        />
+        {!FEATURE_FLAGS.cleanLaunchCopy && (
+          <Testimonial
+            quote="I haven't quit anything. I just have to breathe for a minute before the app opens — and half the time, by the time I'm done, I've forgotten what I picked up the phone for."
+            attribution="Beta tester, 6 weeks in"
+          />
+        )}
       </div>
     </ScreenContainer>
   );

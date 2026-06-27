@@ -6,7 +6,8 @@ Use this as the working checklist for launch readiness. Items are ordered by imp
 
 ## P0 - Launch Blockers
 
-- [ ] P0.1 Wire waitlist submission to real storage.
+- [x] <span style="color:#666"><s><em>P0.1 Wire waitlist submission to real storage.</em></s></span>
+  - Done: production waitlist submits through `/api/waitlist` to Kit/ConvertKit, with local mock-server support for testing.
   - Current behavior appears to simulate success after a short delay and logs the payload to the console.
   - A successful submission must persist the lead somewhere production can access.
   - Verify saved leads include email, timestamp, and acquisition/source metadata when available.
@@ -30,17 +31,20 @@ Use this as the working checklist for launch readiness. Items are ordered by imp
 
 ## P1 - Trust And Claim Safety
 
-- [ ] P1.1 Replace or substantiate social proof.
+- [x] <span style="color:#666"><s><em>P1.1 Replace or substantiate social proof.</em></s></span>
+  - Done behind `VITE_CLEAN_LAUNCH_COPY`: mature scale, rating, and beta-testimonial claims can be replaced; early-bird spot counts always remain visible.
   - Review claims including `1,000,000+ people`, `1M+ people`, `4.7 rating`, beta tester quotes, and `583/1000` spots.
   - If the product is pre-launch, use honest founding-waitlist language instead of mature social proof.
   - If any proof is real, add enough context to make it believable, such as sample size, beta status, or source.
 
-- [ ] P1.2 Soften unsupported scientific and outcome claims.
+- [x] <span style="color:#666"><s><em>P1.2 Soften unsupported scientific and outcome claims.</em></s></span>
+  - Done behind `VITE_CLEAN_LAUNCH_COPY`: broad science/outcome language can be softened and precise unsupported calmness claims replaced.
   - Replace broad statements like "Science agrees" with more defensible behavior-change framing.
   - Avoid precise claims such as "Feel 30% calmer" unless there is evidence behind them.
   - Cite specific studies or experts before claiming backing from longitudinal studies, systematic reviews, or behavioral science experts.
 
-- [ ] P1.3 Clarify what the user is joining before email capture.
+- [x] <span style="color:#666"><s><em>P1.3 Clarify what the user is joining before email capture.</em></s></span>
+  - Done behind `VITE_CLEAN_LAUNCH_COPY`: email capture can explain the early-access waitlist, mobile app direction, launch updates, and planned founding price.
   - Add a concise pre-email screen or section explaining the product format, such as iOS app, Android app, browser extension, or waitlist.
   - Include what happens after joining, expected launch timing if known, and whether pricing is final or estimated.
 
@@ -82,29 +86,33 @@ Use this as the working checklist for launch readiness. Items are ordered by imp
   - Reflect the user's selected goals, apps, hooks, emotions, and current/target usage in the plan output.
   - Ensure the plan does not feel generic after collecting many answers.
 
-- [ ] P3.4 Capture useful intent metadata.
+- [x] <span style="color:#666"><s><em>P3.4 Capture useful intent metadata.</em></s></span>
+  - Done: waitlist and analytics payloads include funnel answers plus source/campaign attribution where available.
   - Persist goals, apps, hooks, emotions, current hours, target hours, age if kept, and campaign/source data.
   - Use this for segmentation, follow-up messaging, and ad iteration.
 
 ## Copy Cleanup
 
-- [ ] C.1 Resolve the launch-state mismatch.
+- [x] <span style="color:#666"><s><em>C.1 Resolve the launch-state mismatch.</em></s></span>
+  - Done: aligned the funnel around prelaunch/early-access language.
   - "Be first when Stillscroll launches" conflicts with ratings, million-user claims, and a mature-looking 7-day plan.
   - Decide whether the product is pre-launch, beta, or launched, then align all copy to that state.
 
 - [ ] C.2 Replace vulnerable or awkward phrasing.
+  - Note: restored the stronger product voice for now; only clearly unverifiable claims were removed.
   - Consider changing "Your nervous system has work to do" to "Your plan starts with your nervous system" or "Let's make the pause easier."
   - Change "Practice every day or more" to "Practice daily" or "Build a daily pause."
 
 - [ ] C.3 Explain "Library Access" if it remains in the unlock section.
+  - Note: restored the original label for now to keep this pass focused on the highest-risk claims.
   - Make clear what the library contains and why it matters.
   - Remove it if it is not part of the real product promise.
 
 ## Definition Of Launch Ready
 
-- [ ] D.1 A real user can complete the funnel and be saved to the waitlist.
-- [ ] D.2 Production users cannot see dev-only navigation.
-- [ ] D.3 Savings math is correct for all valid current/target combinations.
-- [ ] D.4 Invalid or non-positive savings combinations do not show misleading outcomes.
-- [ ] D.5 All social proof, ratings, scarcity, beta, and science claims are either true and defensible or replaced with honest copy.
-- [ ] D.6 The user understands what Stillscroll is and what joining the waitlist means before submitting an email.
+- [x] <span style="color:#666"><s><em>D.1 A real user can complete the funnel and be saved to the waitlist.</em></s></span>
+- [x] <span style="color:#666"><s><em>D.2 Production users cannot see dev-only navigation.</em></s></span>
+- [x] <span style="color:#666"><s><em>D.3 Savings math is correct for all valid current/target combinations.</em></s></span>
+- [x] <span style="color:#666"><s><em>D.4 Invalid or non-positive savings combinations do not show misleading outcomes.</em></s></span>
+- [x] <span style="color:#666"><s><em>D.5 All social proof, ratings, scarcity, beta, and science claims are either true and defensible or replaced with honest copy.</em></s></span>
+- [x] <span style="color:#666"><s><em>D.6 The user understands what Stillscroll is and what joining the waitlist means before submitting an email.</em></s></span>

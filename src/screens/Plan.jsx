@@ -9,6 +9,7 @@ import {
 import { useOnboarding } from '../state/onboarding.jsx';
 import { shortGoalLabel } from '../state/options.js';
 import { getYearlySavedDays } from '../state/usageMath.js';
+import { FEATURE_FLAGS } from '../config/features.js';
 import './Plan.css';
 
 const FEATURES = [
@@ -52,9 +53,11 @@ export default function Plan() {
         <div className="plan">
           <header className="plan__hero">
             <Stars />
-            <span style={{ fontSize: 13, color: 'var(--ink-dim)' }}>
-              4.7 rating
-            </span>
+            {!FEATURE_FLAGS.cleanLaunchCopy && (
+              <span style={{ fontSize: 13, color: 'var(--ink-dim)' }}>
+                4.7 rating
+              </span>
+            )}
             <H1 lg>
               Your nervous system has work to do.
               <br />
@@ -68,7 +71,11 @@ export default function Plan() {
                 currentH={answers.currentHours}
                 targetH={answers.targetHours}
               />
-              <Chip tone="cool">You'll feel differences by: {targetStr}</Chip>
+              <Chip tone="cool">
+                {FEATURE_FLAGS.cleanLaunchCopy
+                  ? `First checkpoint: ${targetStr}`
+                  : `You'll feel differences by: ${targetStr}`}
+              </Chip>
             </div>
           </Section>
 
@@ -76,7 +83,11 @@ export default function Plan() {
             <div className="plan__bullets">
               <Bullet icon="◉">Practice every day or more</Bullet>
               <Bullet icon="◇">Healthier coping than scrolling</Bullet>
-              <Bullet icon="∿">Feel 30% calmer</Bullet>
+              <Bullet icon="∿">
+                {FEATURE_FLAGS.cleanLaunchCopy
+                  ? 'Make pickup urges less automatic'
+                  : 'Feel 30% calmer'}
+              </Bullet>
               <Bullet icon="⏳">
                 Save <span className="cool">{yearlySavedDays} days</span> this year
               </Bullet>
@@ -139,7 +150,13 @@ export default function Plan() {
               fontSize: 13,
             }}
           >
-            <Stars /> Join 1M+ people learning to pause
+            {FEATURE_FLAGS.cleanLaunchCopy ? (
+              'Join the early-access waitlist for Stillscroll'
+            ) : (
+              <>
+                <Stars /> Join 1M+ people learning to pause
+              </>
+            )}
           </footer>
         </div>
       </ScreenContainer>

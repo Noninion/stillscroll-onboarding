@@ -13,12 +13,14 @@ import {
   getLifetimeReclaimedYears,
   getSavedHoursPerDay,
 } from '../state/usageMath.js';
+import { FEATURE_FLAGS } from '../config/features.js';
 import './WaitlistConfirmation.css';
 
 export default function WaitlistConfirmation() {
   const { answers } = useOnboarding();
   const name = answers.name.trim();
   const email = answers.email.trim();
+  const cleanLaunchCopy = FEATURE_FLAGS.cleanLaunchCopy;
   const saved = getSavedHoursPerDay(answers.currentHours, answers.targetHours);
   const lifetimeGain = getLifetimeReclaimedYears(
     answers.currentHours,
@@ -48,8 +50,10 @@ export default function WaitlistConfirmation() {
         {/* ── Discount badge ── */}
         <div className="wc__discount">
           <div className="wc__discount-header">
-            <Stars count={5} />
-            <span className="wc__discount-label">Early-bird discount — locked in</span>
+            {!cleanLaunchCopy && <Stars count={5} />}
+            <span className="wc__discount-label">
+              {cleanLaunchCopy ? 'Early-access waitlist' : 'Early-bird discount — locked in'}
+            </span>
           </div>
           <div className="wc__discount-body">
             <span className="wc__discount-price">
@@ -57,7 +61,9 @@ export default function WaitlistConfirmation() {
             </span>
             <div className="wc__discount-detail">
               <span className="wc__discount-pill">40% off</span>
-              <span className="wc__discount-orig">normally $29.99/yr</span>
+              <span className="wc__discount-orig">
+                {cleanLaunchCopy ? 'planned launch offer $29.99/yr' : 'normally $29.99/yr'}
+              </span>
             </div>
           </div>
           <p className="wc__discount-note">
@@ -140,7 +146,7 @@ function AnimatedCheck() {
 }
 
 function SpotProgress() {
-  const CLAIMED = 584; // one more than EmailCapture shows (this user claimed one)
+  const CLAIMED = 584;
   const TOTAL = 1000;
   const pct = Math.round((CLAIMED / TOTAL) * 100);
 

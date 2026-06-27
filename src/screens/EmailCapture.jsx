@@ -16,6 +16,7 @@ import {
   trackWaitlistSubmitFailed,
   trackWaitlistSubmitted,
 } from '../analytics/index.js';
+import { FEATURE_FLAGS } from '../config/features.js';
 import './EmailCapture.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +27,7 @@ export default function EmailCapture() {
   const [error, setError] = useState('');
   const [emailStarted, setEmailStarted] = useState(false);
   const inputRef = useRef(null);
+  const cleanLaunchCopy = FEATURE_FLAGS.cleanLaunchCopy;
 
   const name = answers.name.trim();
   const email = answers.email;
@@ -126,10 +128,10 @@ export default function EmailCapture() {
           >
             {loading ? (
               <span className="ec__spinner-wrap">
-                <Spinner /> Saving your spot…
+                <Spinner /> {cleanLaunchCopy ? 'Joining waitlist…' : 'Saving your spot…'}
               </span>
             ) : (
-              'Claim Early-Bird Spot →'
+              cleanLaunchCopy ? 'Join Early-Access Waitlist →' : 'Claim Early-Bird Spot →'
             )}
           </Button>
           <FooterNote style={{ textAlign: 'center' }}>
@@ -140,25 +142,44 @@ export default function EmailCapture() {
     >
       {/* ── Header ── */}
       <PreHead>Your plan is ready{name ? `, ${name}` : ''}.</PreHead>
-      <H1>
-        Be first when{' '}
-        <span className="cool">Stillscroll</span> launches.
-      </H1>
+      {cleanLaunchCopy ? (
+        <H1>
+          Join the early-access waitlist for{' '}
+          <span className="cool">Stillscroll.</span>
+        </H1>
+      ) : (
+        <H1>
+          Be first when{' '}
+          <span className="cool">Stillscroll</span> launches.
+        </H1>
+      )}
 
       {/* ── Early-bird badge ── */}
       <div className="ec__badge">
         <span className="ec__badge-pill">
-          <Stars count={5} /> Early-bird offer
+          {cleanLaunchCopy ? (
+            'Early-access app waitlist'
+          ) : (
+            <>
+              <Stars count={5} /> Early-bird offer
+            </>
+          )}
         </span>
         <div className="ec__badge-row">
           <span className="ec__badge-price">
             <span className="ec__badge-new">$17.99<span className="ec__badge-unit">/yr</span></span>
-            <span className="ec__badge-was">was $29.99</span>
+            <span className="ec__badge-was">
+              {cleanLaunchCopy ? 'planned founding price' : 'was $29.99'}
+            </span>
           </span>
-          <span className="ec__badge-tag">40% off at launch</span>
+          <span className="ec__badge-tag">
+            {cleanLaunchCopy ? 'Mobile app first' : '40% off at launch'}
+          </span>
         </div>
         <p className="ec__badge-note">
-          Your discount is locked in the moment you join — no strings attached.
+          {cleanLaunchCopy
+            ? 'You will get product updates, launch timing, and first access when Stillscroll opens to early users.'
+            : 'Your discount is locked in the moment you join — no strings attached.'}
         </p>
       </div>
 
@@ -200,7 +221,6 @@ export default function EmailCapture() {
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function SpotCounter() {
-  // Static snapshot — update this via your backend / dashboard.
   const CLAIMED = 583;
   const TOTAL = 1000;
   const pct = Math.round((CLAIMED / TOTAL) * 100);

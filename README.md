@@ -79,6 +79,15 @@ In production, the frontend defaults to:
 
 So `VITE_WAITLIST_ENDPOINT` is optional for production.
 
+Optional launch copy flag:
+
+```txt
+VITE_CLEAN_LAUNCH_COPY=true
+```
+
+Set it to `false` to use the original launch copy. The early-bird spot-count
+sections always show.
+
 ## TikTok Ads
 
 Set the production domain in Vercel:
