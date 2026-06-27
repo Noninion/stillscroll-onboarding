@@ -34,10 +34,10 @@ export default function NativeScreenTime() {
           }}
         >
           <div style={{ fontWeight: 600, marginBottom: 8 }}>
-            "Stillscroll" Would Like to Access Screen Time
+            "StillScroll" Would Like to Access Screen Time
           </div>
           <Body>
-            This lets Stillscroll see which apps you use and apply your
+            This lets StillScroll see which apps you use and apply your
             blocking rules.
           </Body>
           <div

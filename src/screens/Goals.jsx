@@ -26,7 +26,7 @@ export default function Goals() {
       <PreHead>
         So, tell us{trimmedName ? `, ${trimmedName}` : ''},
       </PreHead>
-      <H1>What do you want to get out of Stillscroll?</H1>
+      <H1>What do you want to get out of StillScroll?</H1>
       <Sub>Choose up to 3</Sub>
       <ChoiceList
         options={GOAL_OPTIONS}

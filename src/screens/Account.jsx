@@ -39,7 +39,7 @@ export default function Account() {
       >
         <TransformFigure />
         <H1>
-          Join <span className="cool">Stillscroll.</span>
+          Join <span className="cool">StillScroll.</span>
         </H1>
         <Sub>See the plan we've built for you, and join the community.</Sub>
       </div>

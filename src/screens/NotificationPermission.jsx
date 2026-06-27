@@ -28,8 +28,8 @@ export default function NotificationPermission() {
         </>
       }
     >
-      <PreHead>Let's set up Stillscroll.</PreHead>
-      <H1>Allow Stillscroll to send you notifications.</H1>
+      <PreHead>Let's set up StillScroll.</PreHead>
+      <H1>Allow StillScroll to send you notifications.</H1>
       <Sub>
         We use this so you can start a practice and unblock your apps when you
         want them.
@@ -67,7 +67,7 @@ function NotificationMock() {
       }}
     >
       <div style={{ fontSize: 14, fontWeight: 600 }}>
-        "Stillscroll" Would Like to Send You Notifications
+        "StillScroll" Would Like to Send You Notifications
       </div>
       <div
         style={{

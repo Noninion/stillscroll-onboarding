@@ -17,7 +17,7 @@ export default function Splash() {
 
   return (
     <div className="splash">
-      <div className="splash__brand">Stillscroll</div>
+      <div className="splash__brand">StillScroll</div>
 
       <h1 className="splash__title">
         Replace <span className="warm">Doomscrolling</span> with{' '}

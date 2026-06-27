@@ -51,7 +51,7 @@ function BreatheBeat() {
   return (
     <>
       <div style={beatStyles.intro}>
-        <Body>In Stillscroll, you earn screen time with a breath.</Body>
+        <Body>In StillScroll, you earn screen time with a breath.</Body>
       </div>
       <div style={beatStyles.group}>
         <PulseCircle />

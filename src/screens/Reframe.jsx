@@ -30,13 +30,13 @@ export default function Reframe() {
           justifyContent: 'center',
         }}
       >
-        <H1 lg>Stillscroll can give you back</H1>
+        <H1 lg>StillScroll can give you back</H1>
         <p className="mega cool">
           {lifetimeGain} {unit}+
         </p>
         <Body>of your life, undistracted.</Body>
         <FooterNote>
-          Based on your profile and Stillscroll's program.
+          Based on your profile and StillScroll's program.
         </FooterNote>
       </div>
     </ScreenContainer>

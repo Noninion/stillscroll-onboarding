@@ -83,7 +83,7 @@ export default function Paywall() {
         <Stars />
         <Testimonial
           quote="It makes me pause and breathe before I scroll. That single beat changed my whole relationship to my phone."
-          attribution="Stillscroll user"
+          attribution="StillScroll user"
         />
       </div>
 

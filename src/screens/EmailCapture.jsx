@@ -184,17 +184,17 @@ export default function EmailCapture() {
       <PreHead>Your plan is ready{name ? `, ${name}` : ''}.</PreHead>
       {isIos ? (
         <H1>
-          Get <span className="cool">Stillscroll</span> on the App Store.
+          Get <span className="cool">StillScroll</span> on the App Store.
         </H1>
       ) : cleanLaunchCopy ? (
         <H1>
           Join the early-access waitlist for{' '}
-          <span className="cool">Stillscroll.</span>
+          <span className="cool">StillScroll.</span>
         </H1>
       ) : (
         <H1>
           Be first when{' '}
-          <span className="cool">Stillscroll</span> launches.
+          <span className="cool">StillScroll</span> launches.
         </H1>
       )}
 
@@ -232,9 +232,9 @@ export default function EmailCapture() {
         </div>
         <p className="ec__badge-note">
           {isIos
-            ? 'Install Stillscroll directly from the App Store and start from there.'
+            ? 'Install StillScroll directly from the App Store and start from there.'
             : cleanLaunchCopy
-              ? 'You will get product updates, launch timing, and first access when Stillscroll opens to early users.'
+              ? 'You will get product updates, launch timing, and first access when StillScroll opens to early users.'
               : 'Your discount is locked in the moment you join — no strings attached.'}
         </p>
       </div>

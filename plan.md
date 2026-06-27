@@ -1,4 +1,4 @@
-# Stillscroll Launch Plan
+# StillScroll Launch Plan
 
 Source: funnel audit from May 31, 2026 against `http://localhost:5173/`.
 
@@ -79,7 +79,7 @@ Use this as the working checklist for launch readiness. Items are ordered by imp
   - The product idea is the hook and should not be buried.
 
 - [ ] P3.2 Add one concrete product demo asset.
-  - Preferred demo: open a scrolling app, trigger the Stillscroll pause, complete the breathing ring, unlock minutes.
+  - Preferred demo: open a scrolling app, trigger the StillScroll pause, complete the breathing ring, unlock minutes.
   - Use this near the mechanic explanation, where it can reduce text and increase belief.
 
 - [ ] P3.3 Make the final plan more personalized.
@@ -95,7 +95,7 @@ Use this as the working checklist for launch readiness. Items are ordered by imp
 
 - [x] <span style="color:#666"><s><em>C.1 Resolve the launch-state mismatch.</em></s></span>
   - Done: aligned the funnel around prelaunch/early-access language.
-  - "Be first when Stillscroll launches" conflicts with ratings, million-user claims, and a mature-looking 7-day plan.
+  - "Be first when StillScroll launches" conflicts with ratings, million-user claims, and a mature-looking 7-day plan.
   - Decide whether the product is pre-launch, beta, or launched, then align all copy to that state.
 
 - [ ] C.2 Replace vulnerable or awkward phrasing.
@@ -115,4 +115,4 @@ Use this as the working checklist for launch readiness. Items are ordered by imp
 - [x] <span style="color:#666"><s><em>D.3 Savings math is correct for all valid current/target combinations.</em></s></span>
 - [x] <span style="color:#666"><s><em>D.4 Invalid or non-positive savings combinations do not show misleading outcomes.</em></s></span>
 - [x] <span style="color:#666"><s><em>D.5 All social proof, ratings, scarcity, beta, and science claims are either true and defensible or replaced with honest copy.</em></s></span>
-- [x] <span style="color:#666"><s><em>D.6 The user understands what Stillscroll is and what joining the waitlist means before submitting an email.</em></s></span>
+- [x] <span style="color:#666"><s><em>D.6 The user understands what StillScroll is and what joining the waitlist means before submitting an email.</em></s></span>

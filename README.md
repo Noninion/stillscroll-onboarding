@@ -1,6 +1,6 @@
-# Stillscroll Onboarding
+# StillScroll Onboarding
 
-Vite/React onboarding funnel for the Stillscroll waitlist.
+Vite/React onboarding funnel for the StillScroll waitlist.
 
 ## Local Development
 

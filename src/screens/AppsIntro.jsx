@@ -25,7 +25,7 @@ export default function AppsIntro() {
   const apps = pickConstellation(answers.distractingApps);
   return (
     <ScreenContainer footer={<Button onClick={next}>Select Apps</Button>}>
-      <PreHead>Let's set up Stillscroll.</PreHead>
+      <PreHead>Let's set up StillScroll.</PreHead>
       <H1>Choose the apps that pull you in most.</H1>
       <Sub>You can always change this later.</Sub>
 

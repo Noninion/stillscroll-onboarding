@@ -21,7 +21,7 @@ export default function Routine() {
       }
     >
       <PreHead>
-        Reminders make it 65% more likely you'll stick with Stillscroll after a
+        Reminders make it 65% more likely you'll stick with StillScroll after a
         week.
       </PreHead>
       <H1>What's the best time for you to practice?</H1>

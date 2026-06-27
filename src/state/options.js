@@ -110,7 +110,7 @@ export function stateChipFromGoals(goals) {
   return 'Settled';
 }
 
-// Maps the user's first picked emotion to its "with Stillscroll" counterpart.
+// Maps the user's first picked emotion to its "with StillScroll" counterpart.
 // Used by StateCompare so the cool-side chip directly answers the warm-side
 // emotion the user just selected.
 export function settledChipFromEmotion(emotion) {

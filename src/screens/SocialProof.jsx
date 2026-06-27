@@ -37,7 +37,7 @@ export default function SocialProof() {
               You are building the first version with us.
             </H1>
             <Body>
-              Stillscroll is opening to early users first, so the product can
+              StillScroll is opening to early users first, so the product can
               learn from real screen-time patterns instead of generic advice.
             </Body>
           </>

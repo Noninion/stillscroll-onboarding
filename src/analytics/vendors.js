@@ -434,7 +434,7 @@ function stillscrollContent(properties, fallbackId, fallbackName) {
       : fallbackId,
     content_type: 'product',
     content_name: properties.step_title
-      ? `Stillscroll Step: ${properties.step_title}`
+      ? `StillScroll Step: ${properties.step_title}`
       : fallbackName,
   };
 }
@@ -462,7 +462,7 @@ function buildTikTokEvents(eventName, properties) {
         stillscrollContent(
           properties,
           'stillscroll_onboarding',
-          'Stillscroll Onboarding',
+          'StillScroll Onboarding',
         ),
         eventId,
       ),
@@ -473,7 +473,7 @@ function buildTikTokEvents(eventName, properties) {
     const content = {
       content_id: 'stillscroll_waitlist',
       content_type: 'product',
-      content_name: 'Stillscroll Waitlist',
+      content_name: 'StillScroll Waitlist',
     };
 
     return ['Lead', 'Subscribe', 'CompleteRegistration'].map((name) =>
@@ -489,7 +489,7 @@ function buildTikTokEvents(eventName, properties) {
         stillscrollContent(
           properties,
           'stillscroll_next_button',
-          'Stillscroll Next Button',
+          'StillScroll Next Button',
         ),
         eventId,
       ),

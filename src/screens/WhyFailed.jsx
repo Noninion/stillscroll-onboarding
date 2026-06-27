@@ -104,7 +104,7 @@ export default function WhyFailed() {
   return (
     <ScreenContainer
       scroll
-      footer={<Button onClick={next}>See how Stillscroll works</Button>}
+      footer={<Button onClick={next}>See how StillScroll works</Button>}
     >
       <Stars />
       <H1>{head.h1}</H1>

@@ -27,11 +27,11 @@ export default function Rating() {
       >
         <H1>Give us a rating</H1>
         <Stars />
-        <Body>Stillscroll was built for people like you.</Body>
+        <Body>StillScroll was built for people like you.</Body>
         <SocialRow />
         <Testimonial
           quote="It makes me pause and breathe before I scroll. That single beat changed my whole relationship to my phone."
-          attribution="Stillscroll user"
+          attribution="StillScroll user"
         />
       </div>
     </ScreenContainer>
@@ -64,7 +64,7 @@ function SocialRow() {
         ))}
       </div>
       <span style={{ fontSize: 13, color: 'var(--ink-dim)' }}>
-        +1,000s of Stillscroll users
+        +1,000s of StillScroll users
       </span>
     </div>
   );

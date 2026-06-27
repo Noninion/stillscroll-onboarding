@@ -42,7 +42,7 @@ export default function WaitlistConfirmation() {
           {email && (
             <p className="wc__email-confirm">
               We&apos;ll reach out to{' '}
-              <strong>{email}</strong> the moment Stillscroll launches.
+              <strong>{email}</strong> the moment StillScroll launches.
             </p>
           )}
         </div>
@@ -103,7 +103,7 @@ export default function WaitlistConfirmation() {
         {/* ── Closing copy ── */}
         <div className="wc__closing">
           <Body>
-            Stillscroll is launching soon. Until then, take a breath —
+            StillScroll is launching soon. Until then, take a breath —
             you&apos;ve already made the decision that matters.
           </Body>
         </div>

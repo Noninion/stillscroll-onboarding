@@ -23,7 +23,7 @@ export default function QuizIntro() {
         <SittingFigure />
         <H1>Understanding more about your situation</H1>
         <Body>
-          A few questions so we can shape Stillscroll around what you actually
+          A few questions so we can shape StillScroll around what you actually
           need.
         </Body>
       </div>

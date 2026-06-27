@@ -11,9 +11,9 @@ export default function PreScreenTime() {
   const { next } = useOnboarding();
   return (
     <ScreenContainer footer={<Button onClick={next}>Continue</Button>}>
-      <H1>Connect Stillscroll to Screen Time, securely.</H1>
+      <H1>Connect StillScroll to Screen Time, securely.</H1>
       <Sub>
-        To know which apps you're using, Stillscroll needs your permission.
+        To know which apps you're using, StillScroll needs your permission.
       </Sub>
 
       <div
@@ -52,7 +52,7 @@ function SystemDialogMock() {
       }}
     >
       <div style={{ fontSize: 14, fontWeight: 600 }}>
-        Allow "Stillscroll" to access Screen Time?
+        Allow "StillScroll" to access Screen Time?
       </div>
       <div
         style={{
@@ -62,7 +62,7 @@ function SystemDialogMock() {
           marginBottom: 14,
         }}
       >
-        Stillscroll will be able to see app usage and apply limits.
+        StillScroll will be able to see app usage and apply limits.
       </div>
       <div style={{ display: 'flex', gap: 6 }}>
         <span

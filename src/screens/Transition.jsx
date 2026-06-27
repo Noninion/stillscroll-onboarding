@@ -5,7 +5,7 @@ import { useOnboarding } from '../state/onboarding.jsx';
 export default function Transition() {
   const { answers, next } = useOnboarding();
   const name = answers.name.trim() || 'Friend';
-  const full = `${name}, let's connect Stillscroll to your phone.`;
+  const full = `${name}, let's connect StillScroll to your phone.`;
   const [shown, setShown] = useState(0);
 
   useEffect(() => {

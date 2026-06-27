@@ -44,7 +44,7 @@ export default function StateCompare() {
         <Divider />
 
         <H2>
-          With <span className="cool">Stillscroll</span>
+          With <span className="cool">StillScroll</span>
         </H2>
         <Chip tone="cool">{settled}</Chip>
 

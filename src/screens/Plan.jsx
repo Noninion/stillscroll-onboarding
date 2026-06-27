@@ -151,7 +151,7 @@ export default function Plan() {
             }}
           >
             {FEATURE_FLAGS.cleanLaunchCopy ? (
-              'Join the early-access waitlist for Stillscroll'
+              'Join the early-access waitlist for StillScroll'
             ) : (
               <>
                 <Stars /> Join 1M+ people learning to pause
@@ -161,7 +161,7 @@ export default function Plan() {
         </div>
       </ScreenContainer>
       <div className="plan__sticky">
-        <Button onClick={next}>Join Stillscroll</Button>
+        <Button onClick={next}>Join StillScroll</Button>
       </div>
     </>
   );
@@ -189,7 +189,7 @@ function Bullet({ icon, children }) {
 
 function Projection({ currentH, targetH }) {
   // Two curves over Day 0 → Day 30.
-  // Stillscroll: smooth descent currentH → targetH.
+  // StillScroll: smooth descent currentH → targetH.
   // Conventional: oscillates and rises.
   const days = 30;
   const w = 280;
